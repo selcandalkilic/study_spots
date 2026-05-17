@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "name": "JKU Library",
+    "city": "Linz",
+    "country": "Austria",
+    "category": "Library",
+    "latitude": 48.337,
+    "longitude": 14.3209,
+    "description": "University library with quiet study areas.",
+    "wifi": true,
+    "quiet": true,
+    "openingHours": "Mon-Fri 08:00-22:00"
+  },
+  {
+    "id": 2,
+    "name": "Linz City Library",
+    "city": "Linz",
+    "country": "Austria",
+    "category": "Library",
+    "latitude": 48.3069,
+    "longitude": 14.2858,
+    "description": "Public library in Linz suitable for studying.",
+    "wifi": true,
+    "quiet": true,
+    "openingHours": "Check official website"
+  },
+  {
+    "id": 3,
+    "name": "Istanbul University Library",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "category": "Library",
+    "latitude": 41.0122,
+    "longitude": 28.9637,
+    "description": "University library and study environment in Istanbul.",
+    "wifi": true,
+    "quiet": true,
+    "openingHours": "Check official website"
+  },
+  {
+    "id": 4,
+    "name": "Salt Galata",
+    "city": "Istanbul",
+    "country": "Turkey",
+    "category": "Library",
+    "latitude": 41.0247,
+    "longitude": 28.9735,
+    "description": "Cultural space with reading and research areas.",
+    "wifi": true,
+    "quiet": true,
+    "openingHours": "Check official website"
+  }
+]

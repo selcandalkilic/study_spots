@@ -6,7 +6,7 @@ Study Spots is a map-based web application that helps students find study-friend
 
 You can view the website here:
 
-hhttps://study-spots-pi.vercel.app/
+https://study-spots-pi.vercel.app/
 
 ## Features
 

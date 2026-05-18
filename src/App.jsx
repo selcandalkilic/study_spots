@@ -2,6 +2,7 @@ import { useState } from "react";
 import StudyMap from "./components/StudyMap";
 import places from "./data/places.json";
 import "./App.css";
+import PlaceList from "./components/PlaceList";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -23,6 +24,7 @@ function App() {
       </div>
 
       <StudyMap places={filteredPlaces} />
+      <PlaceList places={filteredPlaces} />
     </div>
   );
 }

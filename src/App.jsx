@@ -3,11 +3,13 @@ import StudyMap from "./components/StudyMap";
 import places from "./data/places.json";
 import "./App.css";
 import PlaceList from "./components/PlaceList";
+import PlaceDetails from "./components/PlaceDetails";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const filteredPlaces = places.filter((place) => {
   const cityMatches =
@@ -55,7 +57,17 @@ function App() {
       
 
       <StudyMap places={filteredPlaces} />
-      <PlaceList places={filteredPlaces} />
+      {selectedPlace ? (
+  <PlaceDetails
+    place={selectedPlace}
+    onClose={() => setSelectedPlace(null)}
+  />
+) : (
+  <PlaceList
+    places={filteredPlaces}
+    onSelectPlace={setSelectedPlace}
+  />
+)}
     </div>
   );
 }

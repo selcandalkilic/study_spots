@@ -257,3 +257,29 @@ button {
   border: 1px solid #555;
   font-size: 16px;
 } 
+.place-details {
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 24px;
+  background-color: #2f2f2f;
+  border: 1px solid #444;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.place-details button {
+  margin-bottom: 16px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.details-grid div {
+  background-color: #3a3a3a;
+  padding: 16px;
+  border-radius: 8px;
+}

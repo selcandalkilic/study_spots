@@ -1,4 +1,4 @@
-function PlaceList({ places }) {
+function PlaceList({ places , onSelectPlace}) {
   return (
     <div className="place-list">
       <h2>Study Places</h2>
@@ -11,7 +11,9 @@ function PlaceList({ places }) {
           <p>Category: {place.category}</p>
           <p>WiFi: {place.wifi ? "Yes" : "No"}</p>
           <p>Quiet: {place.quiet ? "Yes" : "No"}</p>
-          <p>Opening hours: {place.openingHours}</p>
+          <button onClick={() => onSelectPlace(place)}>
+  View details
+</button>
         </div>
       ))}
     </div>

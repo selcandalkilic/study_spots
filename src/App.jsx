@@ -6,22 +6,37 @@ import PlaceList from "./components/PlaceList";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredPlaces =
-    selectedCity === "All"
-      ? places
-      : places.filter((place) => place.city === selectedCity);
+  const filteredPlaces = places.filter((place) => {
+    const cityMatches =
+    selectedCity === "All" || place.city === selectedCity;
+      
+      const categoryMatches =
+      selectedCategory === "All" || place.category === selectedCategory;
 
+      return cityMatches && categoryMatches;
+  });
+   
   return (
     <div>
       <h1>Study Spots</h1>
       <p>Find study-friendly places in Linz and Istanbul.</p>
 
-      <div>
+      <div  className="filter-buttons">
         <button onClick={() => setSelectedCity("All")}>All</button>
         <button onClick={() => setSelectedCity("Linz")}>Linz</button>
         <button onClick={() => setSelectedCity("Istanbul")}>Istanbul</button>
+        </div>
+
+      <div className="filter-buttons">
+        <button onClick={() => setSelectedCategory("All")}>All categories</button>
+        <button onClick={() => setSelectedCategory("Library")}>Library</button>
+        <button onClick={() => setSelectedCategory("Cafe")}>Cafe</button>
+        <button onClick={() => setSelectedCategory("University")}>University</button>
+        <button onClick={() => setSelectedCategory("Other")}>Other</button>
       </div>
+      
 
       <StudyMap places={filteredPlaces} />
       <PlaceList places={filteredPlaces} />

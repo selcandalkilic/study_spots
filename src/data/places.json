@@ -10,7 +10,13 @@
     "description": "University library with quiet study areas.",
     "wifi": true,
     "quiet": true,
-    "openingHours": "Mon-Fri 08:00-22:00"
+    "openingHours": "Mon-Fri 08:00-22:00",
+    "rating": 4.5,
+    "priceLevel": "Medium",
+    "wifiQuality": "Good",
+    "outlets": "Some",
+    "noiseLevel": "Quiet",
+    "seating": "Indoor"
   },
   {
     "id": 2,
@@ -23,7 +29,13 @@
     "description": "Public library in Linz suitable for studying.",
     "wifi": true,
     "quiet": true,
-    "openingHours": "Check official website"
+    "openingHours": "Check official website",
+    "rating": 4.5,
+    "priceLevel": "Medium",
+    "wifiQuality": "Good",
+    "outlets": "Some",
+    "noiseLevel": "Quiet",
+    "seating": "Indoor"
   },
   {
     "id": 3,
@@ -36,7 +48,13 @@
     "description": "University library and study environment in Istanbul.",
     "wifi": true,
     "quiet": true,
-    "openingHours": "Check official website"
+    "openingHours": "Check official website",
+    "rating": 4.5,
+    "priceLevel": "Medium",
+    "wifiQuality": "Good",
+    "outlets": "Some",
+    "noiseLevel": "Quiet",
+    "seating": "Indoor"
   },
   {
     "id": 4,
@@ -49,6 +67,12 @@
     "description": "Cultural space with reading and research areas.",
     "wifi": true,
     "quiet": true,
-    "openingHours": "Check official website"
+    "openingHours": "Check official website",
+    "rating": 4.5,
+    "priceLevel": "Medium",
+    "wifiQuality": "Good",
+    "outlets": "Some",
+    "noiseLevel": "Quiet",
+    "seating": "Indoor"
   }
 ]

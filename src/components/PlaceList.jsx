@@ -11,6 +11,11 @@ function PlaceList({ places , onSelectPlace}) {
           <p>Category: {place.category}</p>
           <p>WiFi: {place.wifi ? "Yes" : "No"}</p>
           <p>Quiet: {place.quiet ? "Yes" : "No"}</p>
+          <p>Study rating: {place.studyRating}/5</p>
+          <p>WiFi quality: {place.wifiQuality}</p>
+          <p>Outlets: {place.outlets}</p>
+          <p>Noise level: {place.noiseLevel}</p>
+          <p>Seating: {place.seating}</p>
           <button onClick={() => onSelectPlace(place)}>
   View details
 </button>

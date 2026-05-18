@@ -182,3 +182,9 @@
     border-right-color: var(--border);
   }
 }
+
+button {
+  margin: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}

@@ -7,16 +7,23 @@ import PlaceList from "./components/PlaceList";
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchText, setSearchText] = useState("");
 
   const filteredPlaces = places.filter((place) => {
-    const cityMatches =
+  const cityMatches =
     selectedCity === "All" || place.city === selectedCity;
-      
-      const categoryMatches =
-      selectedCategory === "All" || place.category === selectedCategory;
 
-      return cityMatches && categoryMatches;
-  });
+  const categoryMatches =
+    selectedCategory === "All" || place.category === selectedCategory;
+
+  const searchMatches =
+    place.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    place.city.toLowerCase().includes(searchText.toLowerCase()) ||
+    place.category.toLowerCase().includes(searchText.toLowerCase()) ||
+    place.description.toLowerCase().includes(searchText.toLowerCase());
+
+  return cityMatches && categoryMatches && searchMatches;
+});
    
   return (
     <div>
@@ -36,6 +43,15 @@ function App() {
         <button onClick={() => setSelectedCategory("University")}>University</button>
         <button onClick={() => setSelectedCategory("Other")}>Other</button>
       </div>
+
+      <div className="search-box">
+  <input
+    type="text"
+    placeholder="Search study spots..."
+    value={searchText}
+    onChange={(event) => setSearchText(event.target.value)}
+  />
+</div>
       
 
       <StudyMap places={filteredPlaces} />

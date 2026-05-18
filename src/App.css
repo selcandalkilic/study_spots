@@ -245,3 +245,15 @@ button {
   margin: 6px 0;
   color: #dddddd;
 }
+.search-box {
+  margin: 16px auto;
+  max-width: 400px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  font-size: 16px;
+} 

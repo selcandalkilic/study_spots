@@ -16,22 +16,6 @@ function PlaceDetails({ place, onClose }) {
 
       <div className="details-grid">
         <div>
-            <div className="reviews-section">
-        <h3>Reviews</h3>
-
-        {place.reviews && place.reviews.length > 0 ? (
-            place.reviews.map((review) => (
-            <div className="review-card" key={review.id}>
-                <strong>{review.author}</strong>
-                <p>Rating: {review.rating}/5</p>
-                <p>{review.comment}</p>
-                <small>{review.date}</small>
-            </div>
-            ))
-        ) : (
-            <p>No reviews yet.</p>
-        )}
-        </div>
           <strong>WiFi</strong>
           <p>{place.wifi ? "Yes" : "No"}</p>
         </div>
@@ -43,7 +27,7 @@ function PlaceDetails({ place, onClose }) {
 
         <div>
           <strong>Opening hours</strong>
-          <p>{place.openingHours}</p>
+          <p>{place.opening_hours}</p>
         </div>
 
         <div>
@@ -52,60 +36,71 @@ function PlaceDetails({ place, onClose }) {
         </div>
 
         <div>
-  <strong>Study rating</strong>
-  <p>{place.studyRating}/5</p>
-</div>
+          <strong>Study rating</strong>
+          <p>{place.rating}/5</p>
+        </div>
 
-<div>
-  <strong>WiFi quality</strong>
-  <p>{place.wifiQuality}</p>
-</div>
+        <div>
+          <strong>WiFi quality</strong>
+          <p>{place.wifi_quality}</p>
+        </div>
 
-<div>
-  <strong>Power outlets</strong>
-  <p>{place.outlets}</p>
-</div>
+        <div>
+          <strong>Power outlets</strong>
+          <p>{place.outlets}</p>
+        </div>
 
-<div>
-  <strong>Noise level</strong>
-  <p>{place.noiseLevel}</p>
-</div>
+        <div>
+          <strong>Noise level</strong>
+          <p>{place.noise_level}</p>
+        </div>
 
-<div>
-  <strong>Seating</strong>
-  <p>{place.seating}</p>
-</div>
+        <div>
+          <strong>Seating</strong>
+          <p>{place.seating}</p>
+        </div>
 
-<div>
-  <strong>Laptop friendly</strong>
-  <p>{place.laptopFriendly ? "Yes" : "No"}</p>
-</div>
+        <div>
+          <strong>Laptop friendly</strong>
+          <p>{place.laptop_friendly ? "Yes" : "No"}</p>
+        </div>
 
-<div>
-  <strong>Solo study</strong>
-  <p>{place.soloStudy ? "Yes" : "No"}</p>
-</div>
+        <div>
+          <strong>Solo study</strong>
+          <p>{place.solo_study ? "Yes" : "No"}</p>
+        </div>
 
-<div>
-  <strong>Group study</strong>
-  <p>{place.groupStudy ? "Yes" : "No"}</p>
-</div>
+        <div>
+          <strong>Group study</strong>
+          <p>{place.group_study ? "Yes" : "No"}</p>
+        </div>
 
-<div>
+        <div>
+          <strong>Best time to study</strong>
+          <p>{place.best_time_to_study}</p>
+        </div>
 
-  <strong>Best time to study</strong>
+        <div>
+          <strong>Crowded times</strong>
+          <p>{place.crowded_times}</p>
+        </div>
+      </div>
 
-  <p>{place.bestTimeToStudy}</p>
+      <div className="reviews-section">
+        <h3>Reviews</h3>
 
-</div>
-
-<div>
-
-  <strong>Crowded times</strong>
-
-  <p>{place.crowdedTimes}</p>
-
-</div>
+        {place.reviews && place.reviews.length > 0 ? (
+          place.reviews.map((review) => (
+            <div className="review-card" key={review.id}>
+              <strong>{review.author}</strong>
+              <p>Rating: {review.rating}/5</p>
+              <p>{review.comment}</p>
+              <small>{review.date}</small>
+            </div>
+          ))
+        ) : (
+          <p>No reviews yet.</p>
+        )}
       </div>
     </div>
   );

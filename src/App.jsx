@@ -1,15 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StudyMap from "./components/StudyMap";
-import places from "./data/places.json";
 import "./App.css";
 import PlaceList from "./components/PlaceList";
 import PlaceDetails from "./components/PlaceDetails";
+import { supabase } from "./supabaseClient";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [places, setPlaces] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  async function fetchPlaces() {
+    const { data, error } = await supabase
+      .from("places")
+      .select("*");
+
+    if (error) {
+      console.error("Error fetching places:", error);
+    } else {
+      setPlaces(data);
+    }
+
+    setLoading(false);
+  }
+
+  fetchPlaces();
+}, []);
 
   const filteredPlaces = places.filter((place) => {
   const cityMatches =
@@ -26,6 +46,10 @@ function App() {
 
   return cityMatches && categoryMatches && searchMatches;
 });
+
+if (loading) {
+  return <p>Loading places...</p>;
+}
    
   return (
     <div>

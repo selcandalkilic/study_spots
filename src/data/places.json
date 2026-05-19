@@ -69,10 +69,26 @@
     "quiet": true,
     "openingHours": "Check official website",
     "rating": 4.5,
-    "priceLevel": "Medium",
     "wifiQuality": "Good",
     "outlets": "Some",
     "noiseLevel": "Quiet",
-    "seating": "Indoor"
+    "seating": "Indoor",
+    "reviews": [
+  {
+    "id": 1,
+    "author": "Selcan",
+    "rating": 5,
+    "comment": "Very quiet and good for studying.",
+    "date": "2026-05-19"
+  },
+  {
+    "id": 2,
+    "author": "Emire",
+    "rating": 4,
+    "comment": "Good WiFi, but it gets crowded in the afternoon.",
+    "date": "2026-05-19"
   }
 ]
+  }
+]
+  

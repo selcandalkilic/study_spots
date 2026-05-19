@@ -16,6 +16,22 @@ function PlaceDetails({ place, onClose }) {
 
       <div className="details-grid">
         <div>
+            <div className="reviews-section">
+        <h3>Reviews</h3>
+
+        {place.reviews && place.reviews.length > 0 ? (
+            place.reviews.map((review) => (
+            <div className="review-card" key={review.id}>
+                <strong>{review.author}</strong>
+                <p>Rating: {review.rating}/5</p>
+                <p>{review.comment}</p>
+                <small>{review.date}</small>
+            </div>
+            ))
+        ) : (
+            <p>No reviews yet.</p>
+        )}
+        </div>
           <strong>WiFi</strong>
           <p>{place.wifi ? "Yes" : "No"}</p>
         </div>

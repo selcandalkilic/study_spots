@@ -283,3 +283,21 @@ button {
   padding: 16px;
   border-radius: 8px;
 }
+.reviews-section {
+  margin-top: 32px;
+}
+
+.review-card {
+  background-color: #3a3a3a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.review-card p {
+  margin: 6px 0;
+}
+
+.review-card small {
+  color: #bbbbbb;
+}

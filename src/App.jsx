@@ -4,6 +4,7 @@ import "./App.css";
 import PlaceList from "./components/PlaceList";
 import PlaceDetails from "./components/PlaceDetails";
 import { supabase } from "./supabaseClient";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -58,6 +59,7 @@ if (loading) {
    
   return (
     <div>
+      <Navbar />
       <h1>Study Spots</h1>
       <p>Find study-friendly places in Linz and Istanbul.</p>
 

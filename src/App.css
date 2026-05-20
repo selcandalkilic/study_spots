@@ -301,3 +301,63 @@ button {
 .review-card small {
   color: #bbbbbb;
 }
+.navbar {
+  width: 100%;
+  padding: 16px 32px;
+  background-color: #1f1f1f;
+  border-bottom: 1px solid #444;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.navbar-logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-links a:hover {
+  text-decoration: underline;
+}
+
+.navbar-links button {
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  scroll-margin-top: 80px;
+}
+#map {
+  margin-top: 24px;
+}
+
+#places {
+  margin-top: 40px;
+}
+#map {
+  padding-top: 40px;
+  min-height: 600px;
+}
+
+#places {
+  padding-top: 40px;
+  min-height: 600px;
+}
+.navbar-links a {
+  cursor: pointer;
+}

@@ -4,8 +4,13 @@ function Navbar() {
       <div className="navbar-logo">📍 Study Spots</div>
 
       <div className="navbar-links">
-        <a href="#map">Map</a>
-        <a href="#places">Places</a>
+        <a onClick={() => document.getElementById("map")?.scrollIntoView({ behavior: "smooth" })}>
+  Map
+</a>
+
+<a onClick={() => document.getElementById("places")?.scrollIntoView({ behavior: "smooth" })}>
+  Places
+</a>
         <button>Add a Spot</button>
       </div>
     </nav>

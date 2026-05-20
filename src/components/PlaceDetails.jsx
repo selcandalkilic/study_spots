@@ -35,9 +35,9 @@ function PlaceDetails({ place, onClose }) {
           <p>{place.category}</p>
         </div>
 
-        <div>
-          <strong>Study rating</strong>
-          <p>{place.rating}/5</p>
+       <div>
+            <strong>Study rating</strong>
+            <p>{place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
         </div>
 
         <div>
@@ -92,10 +92,10 @@ function PlaceDetails({ place, onClose }) {
         {place.reviews && place.reviews.length > 0 ? (
           place.reviews.map((review) => (
             <div className="review-card" key={review.id}>
-              <strong>{review.author}</strong>
-              <p>Rating: {review.rating}/5</p>
-              <p>{review.comment}</p>
-              <small>{review.date}</small>
+            <strong>Anonymous user</strong>
+            <p>{place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
+            <p>{review.comment}</p>
+            <small>{new Date(review.created_at).toLocaleDateString()}</small>
             </div>
           ))
         ) : (

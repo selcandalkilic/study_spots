@@ -16,6 +16,8 @@ function PlaceList({ places , onSelectPlace}) {
         <p>Outlets: {place.outlets}</p>
         <p>Noise level: {place.noise_level}</p>
         <p>Seating: {place.seating}</p>
+        <p>Opening hours: {place.opening_hours}</p>
+        <p>Study rating: {place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
           <button onClick={() => onSelectPlace(place)}>
   View details
 </button>

@@ -15,9 +15,12 @@ const [loading, setLoading] = useState(true);
 
 useEffect(() => {
   async function fetchPlaces() {
-    const { data, error } = await supabase
-      .from("places")
-      .select("*");
+   const { data, error } = await supabase
+  .from("places")
+  .select("*");
+
+  console.log("Supabase places:", data);
+console.log("Supabase error:", error);
 
     if (error) {
       console.error("Error fetching places:", error);
@@ -30,6 +33,8 @@ useEffect(() => {
 
   fetchPlaces();
 }, []);
+
+
 
   const filteredPlaces = places.filter((place) => {
   const cityMatches =

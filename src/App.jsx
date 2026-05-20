@@ -4,8 +4,6 @@ import "./App.css";
 import PlaceList from "./components/PlaceList";
 import PlaceDetails from "./components/PlaceDetails";
 import { supabase } from "./supabaseClient";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -27,7 +25,7 @@ console.log("Supabase error:", error);
     if (error) {
       console.error("Error fetching places:", error);
     } else {
-      setPlaces(data);
+      setPlaces(data);   
     }
 
     setLoading(false);
@@ -60,8 +58,6 @@ if (loading) {
    
   return (
     <div>
-      <Navbar />
-      <Hero />
       <h1>Study Spots</h1>
       <p>Find study-friendly places in Linz and Istanbul.</p>
 
@@ -88,25 +84,19 @@ if (loading) {
   />
 </div>
       
-  <section id="map">
-      <StudyMap
-  places={filteredPlaces}
-  onSelectPlace={setSelectedPlace}
-/>
-    </section>
-    <section id="places">
+
+      <StudyMap places={filteredPlaces} />
       {selectedPlace ? (
-        <PlaceDetails
-        place={selectedPlace}
-        onClose={() => setSelectedPlace(null)}
-      />
-    ) : (
-      <PlaceList
-        places={filteredPlaces}
-        onSelectPlace={setSelectedPlace}
-      />
-    )}
-    </section>
+  <PlaceDetails
+    place={selectedPlace}
+    onClose={() => setSelectedPlace(null)}
+  />
+) : (
+  <PlaceList
+    places={filteredPlaces}
+    onSelectPlace={setSelectedPlace}
+  />
+)}
     </div>
   );
 }

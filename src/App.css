@@ -361,3 +361,25 @@ section {
 .navbar-links a {
   cursor: pointer;
 }
+.hero {
+  padding: 100px 20px 60px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 56px;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  max-width: 700px;
+  margin: 0 auto 32px;
+  font-size: 20px;
+  color: #cccccc;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}

@@ -5,6 +5,7 @@ import PlaceList from "./components/PlaceList";
 import PlaceDetails from "./components/PlaceDetails";
 import { supabase } from "./supabaseClient";
 import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -60,6 +61,7 @@ if (loading) {
   return (
     <div>
       <Navbar />
+      <Hero />
       <h1>Study Spots</h1>
       <p>Find study-friendly places in Linz and Istanbul.</p>
 
@@ -86,19 +88,22 @@ if (loading) {
   />
 </div>
       
-
+  <section id="map">
       <StudyMap places={filteredPlaces} />
+    </section>
+    <section id="places">
       {selectedPlace ? (
-  <PlaceDetails
-    place={selectedPlace}
-    onClose={() => setSelectedPlace(null)}
-  />
-) : (
-  <PlaceList
-    places={filteredPlaces}
-    onSelectPlace={setSelectedPlace}
-  />
-)}
+        <PlaceDetails
+        place={selectedPlace}
+        onClose={() => setSelectedPlace(null)}
+      />
+    ) : (
+      <PlaceList
+        places={filteredPlaces}
+        onSelectPlace={setSelectedPlace}
+      />
+    )}
+    </section>
     </div>
   );
 }

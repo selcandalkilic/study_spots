@@ -1,7 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-function StudyMap({ places = [] }) {
+function StudyMap({ places, onSelectPlace }) {
   return (
     <div style={{ height: "500px", width: "100%" }}>
       <MapContainer
@@ -15,7 +15,13 @@ function StudyMap({ places = [] }) {
         />
 
         {places.map((place) => (
-          <Marker key={place.id} position={[place.latitude, place.longitude]}>
+          <Marker
+  key={place.id}
+  position={[place.latitude, place.longitude]}
+  eventHandlers={{
+    click: () => onSelectPlace(place),
+  }}
+>
             <Popup>
               <strong>{place.name}</strong>
               <br />

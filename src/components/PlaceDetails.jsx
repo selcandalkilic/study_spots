@@ -6,11 +6,11 @@ function PlaceDetails({ place, onClose }) {
   return (
     <div className="place-details">
       <button onClick={onClose}>← Back to list</button>
-      {place.images && place.images.length > 0 ? (
+      {place.image_url ? (
         <img
-        className="place-hero-image"
-        src={place.images[0]}
-        alt={place.name}
+          className="place-hero-image"
+          src={place.image_url}
+          alt={place.name}
         />
       ) : (
         <div className="place-image-placeholder">

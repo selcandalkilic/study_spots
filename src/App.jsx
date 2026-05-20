@@ -89,7 +89,10 @@ if (loading) {
 </div>
       
   <section id="map">
-      <StudyMap places={filteredPlaces} />
+      <StudyMap
+  places={filteredPlaces}
+  onSelectPlace={setSelectedPlace}
+/>
     </section>
     <section id="places">
       {selectedPlace ? (

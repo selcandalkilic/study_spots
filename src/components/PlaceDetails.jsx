@@ -17,12 +17,18 @@ function PlaceDetails({ place, onClose }) {
           No image added yet
         </div>
       )}
-      <h2>{place.name}</h2>
-      <p>
-        {place.category} · {place.city}, {place.country}
-      </p>
-
-      <p>{place.description}</p>
+      <div className="place-detail-header">
+        <div>
+          <h2>{place.name}</h2>
+          <p className="place-detail-location">
+            {place.category} · {place.city}, {place.country}
+          </p>
+        </div>
+        <div className="place-detail-rating">
+          ⭐ {place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}
+        </div>
+      </div>
+      <p className="place-detail-description">{place.description}</p>
 
       <div className="details-grid">
         <div>

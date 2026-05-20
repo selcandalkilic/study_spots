@@ -6,7 +6,17 @@ function PlaceDetails({ place, onClose }) {
   return (
     <div className="place-details">
       <button onClick={onClose}>← Back to list</button>
-
+      {place.images && place.images.length > 0 ? (
+        <img
+        className="place-hero-image"
+        src={place.images[0]}
+        alt={place.name}
+        />
+      ) : (
+        <div className="place-image-placeholder">
+          No image added yet
+        </div>
+      )}
       <h2>{place.name}</h2>
       <p>
         {place.category} · {place.city}, {place.country}

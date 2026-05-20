@@ -1,7 +1,31 @@
+import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
+
+
 function PlaceDetails({ place, onClose }) {
   if (!place) {
     return null;
   }
+  const [reviews, setReviews] = useState([]);
+
+useEffect(() => {
+  async function fetchReviews() {
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("place_id", place.id);
+
+    if (error) {
+      console.error("Error fetching reviews:", error);
+    } else {
+      setReviews(data);
+    }
+  }
+
+  if (place) {
+    fetchReviews();
+  }
+}, [place]);
 
   return (
     <div className="place-details">
@@ -105,11 +129,11 @@ function PlaceDetails({ place, onClose }) {
       <div className="reviews-section">
         <h3>Reviews</h3>
 
-        {place.reviews && place.reviews.length > 0 ? (
-          place.reviews.map((review) => (
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
             <div className="review-card" key={review.id}>
             <strong>Anonymous user</strong>
-            <p>{place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
+            <p>{review.rating}/5</p>
             <p>{review.comment}</p>
             <small>{new Date(review.created_at).toLocaleDateString()}</small>
             </div>

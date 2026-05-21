@@ -51,7 +51,7 @@ async function deleteReview(reviewId) {
   }
 }
 
- async function fetchReviews() {
+async function fetchReviews() {
   if (!place) return;
 
   const { data: reviewsData, error: reviewsError } = await supabase
@@ -65,7 +65,14 @@ async function deleteReview(reviewId) {
     return;
   }
 
-  const userIds = reviewsData.map((review) => review.user_id);
+  const userIds = reviewsData
+    .map((review) => review.user_id)
+    .filter(Boolean);
+
+  if (userIds.length === 0) {
+    setReviews(reviewsData || []);
+    return;
+  }
 
   const { data: profilesData, error: profilesError } = await supabase
     .from("profiles")
@@ -74,12 +81,14 @@ async function deleteReview(reviewId) {
 
   if (profilesError) {
     console.log("Profile fetch error:", profilesError);
-    setReviews(reviewsData);
+    setReviews(reviewsData || []);
     return;
   }
 
-  const reviewsWithProfiles = reviewsData.map((review) => {
-    const profile = profilesData.find((profile) => profile.id === review.user_id);
+  const reviewsWithProfiles = (reviewsData || []).map((review) => {
+    const profile = (profilesData || []).find(
+      (profile) => profile.id === review.user_id
+    );
 
     return {
       ...review,
@@ -247,7 +256,7 @@ async function deleteReview(reviewId) {
           <strong>{displayName}</strong>
           <p>
             {"★".repeat(review.rating)}
-            {"☆".repeat(5 - review.rating)} {review.rating}/5
+            {"☆".repeat(5 - (review.rating || 0))} {review.rating || "No rating"}/5
           </p>
           <p>{review.comment}</p>
           <small>{new Date(review.created_at).toLocaleDateString()}</small>

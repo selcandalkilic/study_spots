@@ -47,10 +47,10 @@ function createCategoryIcon(category) {
         center={[48.3069, 14.2858]}
         zoom={5}
         style={{ height: "100%", width: "100%" }}
-        dragging={!isMobile}
-        touchZoom={!isMobile}
+        dragging={true}
+        touchZoom={true}
         scrollWheelZoom={false}
-        doubleClickZoom={!isMobile}
+        doubleClickZoom={true}
       >
         <TileLayer
           attribution="&copy; OpenStreetMap contributors"

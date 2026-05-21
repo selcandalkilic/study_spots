@@ -2543,11 +2543,6 @@ body {
     height: 320px !important;
   }
 
-  .leaflet-container {
-    touch-action: pan-y;
-  }
-}
-
 .custom-map-marker {
   background: transparent !important;
   border: none !important;

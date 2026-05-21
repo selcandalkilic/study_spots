@@ -31,7 +31,7 @@ function PlaceDetails({ place, onClose, session }) {
 
   return (
     <div className="place-details">
-      <button onClick={onClose}>← Back to list</button>
+      <button onClick={() => window.history.back()}>← Back to places</button>
 
       {place.image_url ? (
         <img
@@ -145,7 +145,10 @@ function PlaceDetails({ place, onClose, session }) {
           reviews.map((review) => (
             <div key={review.id} className="review-card">
               <strong>Anonymous user</strong>
-              <p>{"⭐".repeat(review.rating)} {review.rating}/5</p>
+             <p>
+              {"★".repeat(review.rating)}
+              {"☆".repeat(5 - review.rating)} {review.rating}/5
+            </p>
               <p>{review.comment}</p>
               <small>{new Date(review.created_at).toLocaleDateString()}</small>
             </div>

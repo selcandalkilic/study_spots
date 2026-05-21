@@ -3,15 +3,19 @@ import Auth from "../components/Auth";
 
 function LoginPage({ session }) {
   return (
-    <div className="login-page">
-      <Link to="/">
-        <button className="home-button">← Back to homepage</button>
-      </Link>
+    <div className="login-page-wrapper">
+      <div className="login-card">
+        <Link to="/" className="back-home-link">
+          ← Back to homepage
+        </Link>
 
-      <h1>Login</h1>
-      <p>Log in or create an account to review study spots.</p>
+        <div className="login-header">
+          <h1>Welcome back</h1>
+          <p>Log in or create an account to review your favorite study spots.</p>
+        </div>
 
-      <Auth session={session} />
+        <Auth session={session} />
+      </div>
     </div>
   );
 }

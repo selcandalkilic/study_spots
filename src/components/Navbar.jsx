@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useState } from "react";
 
-function Navbar({ searchText, setSearchText, session }) {
+function Navbar({ searchText, setSearchText, session, language, setLanguage }) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   return (
     <nav className="navbar">
@@ -43,10 +43,14 @@ function Navbar({ searchText, setSearchText, session }) {
           Add a Spot
         </Link>
 
-        <select className="navbar-select">
-          <option>EN</option>
-          <option>DE</option>
-          <option>TR</option>
+        <select
+          className="navbar-select"
+          value={language}
+          onChange={(event) => setLanguage(event.target.value)}
+        >
+          <option value="EN">EN</option>
+          <option value="DE">DE</option>
+          <option value="TR">TR</option>
         </select>
 
         {session ? (

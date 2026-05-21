@@ -19,6 +19,50 @@ function App() {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
+  const [language, setLanguage] = useState("EN");
+  const text = {
+  EN: {
+    heroTitle: "Find the perfect place to focus.",
+    heroSubtitle:
+      "Discover study-friendly cafes, libraries, and workspaces in Linz, Vienna and Istanbul.",
+    all: "All",
+    allCategories: "All categories",
+    library: "Library",
+    cafe: "Cafe",
+    university: "University",
+    other: "Other",
+    placesFound: "places found",
+    topPlaces: "Top study spots based on your filters",
+  },
+  DE: {
+    heroTitle: "Finde den perfekten Ort zum Lernen.",
+    heroSubtitle:
+      "Entdecke lernfreundliche Cafés, Bibliotheken und Arbeitsplätze in Linz, Wien und Istanbul.",
+    all: "Alle",
+    allCategories: "Alle Kategorien",
+    library: "Bibliothek",
+    cafe: "Café",
+    university: "Universität",
+    other: "Andere",
+    placesFound: "Orte gefunden",
+    topPlaces: "Top-Lernorte basierend auf deinen Filtern",
+  },
+  TR: {
+    heroTitle: "Odaklanmak için mükemmel yeri bul.",
+    heroSubtitle:
+      "Linz, Viyana ve İstanbul’daki çalışma dostu kafeleri, kütüphaneleri ve çalışma alanlarını keşfedin.",
+    all: "Tüm",
+    allCategories: "Tüm kategoriler",
+    library: "Kütüphane",
+    cafe: "Kafe",
+    university: "Üniversite",
+    other: "Diğer",
+    placesFound: "yer bulundu",
+    topPlaces: "Filtrelerinize göre en iyi çalışma alanları",
+  },
+};
+
+const t = text[language];
 
 useEffect(() => {
   async function fetchPlaces() {
@@ -93,6 +137,8 @@ return (
             searchText={searchText}
             setSearchText={setSearchText}
             session={session}
+            language={language}
+            setLanguage={setLanguage}
           />
 
           <section className="hero-section">

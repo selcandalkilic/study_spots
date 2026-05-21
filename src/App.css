@@ -2716,3 +2716,51 @@ body {
     height: 34px;
   }
 }
+
+/* ===== Mobile star rating fix ===== */
+
+@media (max-width: 768px) {
+  .star-rating,
+  .review-stars {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .star-button,
+  .review-star {
+    font-size: 24px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 28px;
+    max-width: 28px;
+  }
+
+  .star-rating-field,
+  .review-rating-field {
+    text-align: center;
+    width: 100%;
+  }
+
+  .rating-section,
+  .optional-review-section,
+  .improved-review-form {
+    overflow: hidden;
+  }
+
+  .price-rating,
+  .review-price-buttons {
+    justify-content: center;
+  }
+
+  .price-button,
+  .review-price-button {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 13px !important;
+  }
+}

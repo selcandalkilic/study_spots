@@ -184,6 +184,10 @@ return (
     </button>
   </div>
 </section>
+      <p>
+        Debug city: {selectedCity} | category: {selectedCategory} | filtered:{" "}
+        {filteredPlaces.length}
+      </p>
 
 <section className="map-preview-section">
   <div className="top-places-panel">

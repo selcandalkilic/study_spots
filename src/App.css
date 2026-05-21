@@ -2533,3 +2533,22 @@ body {
   -webkit-text-fill-color: #9a90a8 !important;
   opacity: 1 !important;
 }
+@media (max-width: 768px) {
+  .map-panel {
+    min-height: 320px;
+  }
+
+  .map-panel .leaflet-container,
+  .location-preview-map .leaflet-container {
+    height: 320px !important;
+  }
+
+  .leaflet-container {
+    touch-action: pan-y;
+  }
+}
+
+.custom-map-marker {
+  background: transparent !important;
+  border: none !important;
+}

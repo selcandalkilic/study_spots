@@ -6,6 +6,8 @@ import PlaceDetails from "./components/PlaceDetails";
 import { supabase } from "./supabaseClient";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
+import PlacePage from "./pages/PlacePage";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -84,82 +86,162 @@ return (
       <Route
         path="/"
         element={
-          <div>
-            <h1>Study Spots</h1>
-            <p>Find study-friendly places in Linz and Istanbul.</p>
+         <div>
+          <Navbar
+            searchText={searchText}
+            setSearchText={setSearchText}
+            session={session}
+          />
 
-            <div className="top-auth-area">
-              {session ? (
-                <>
-                  <span>Logged in as: {session.user.email}</span>
-                  <button onClick={() => supabase.auth.signOut()}>
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <Link to="/login">
-                  <button>Login</button>
-                </Link>
-              )}
+          <section className="hero-section">
+  <div className="hero-text">
+    <h1>Find the perfect place to focus.</h1>
+    <p>
+      Discover study-friendly cafes, libraries, and workspaces in Linz, Vienna and Istanbul.
+    </p>
+  </div>
+</section>
+
+<section className="filter-section">
+  <div className="filter-group">
+    <button
+      className={selectedCity === "All" ? "filter-chip active" : "filter-chip"}
+      onClick={() => setSelectedCity("All")}
+    >
+      All
+    </button>
+
+    <button
+      className={selectedCity === "Linz" ? "filter-chip active" : "filter-chip"}
+      onClick={() => setSelectedCity("Linz")}
+    >
+      Linz
+    </button>
+
+    <button
+      className={
+        selectedCity === "Istanbul" ? "filter-chip active" : "filter-chip"
+      }
+      onClick={() => setSelectedCity("Istanbul")}
+    >
+      Istanbul
+    </button>
+
+    <button
+      className={selectedCity === "Vienna" ? "filter-chip active" : "filter-chip"}
+      onClick={() => setSelectedCity("Vienna")}
+    >
+      Vienna
+    </button>
+  </div>
+
+  <div className="filter-group">
+    <button
+      className={
+        selectedCategory === "All" ? "filter-chip active" : "filter-chip"
+      }
+      onClick={() => setSelectedCategory("All")}
+    >
+      All categories
+    </button>
+
+    <button
+      className={
+        selectedCategory === "Library" ? "filter-chip active" : "filter-chip"
+      }
+      onClick={() => setSelectedCategory("Library")}
+    >
+      Library
+    </button>
+
+    <button
+      className={
+        selectedCategory === "Cafe" ? "filter-chip active" : "filter-chip"
+      }
+      onClick={() => setSelectedCategory("Cafe")}
+    >
+      Cafe
+    </button>
+
+    <button
+      className={
+        selectedCategory === "University" ? "filter-chip active" : "filter-chip"
+      }
+      onClick={() => setSelectedCategory("University")}
+    >
+      University
+    </button>
+
+    <button
+      className={
+        selectedCategory === "Other" ? "filter-chip active" : "filter-chip"
+      }
+      onClick={() => setSelectedCategory("Other")}
+    >
+      Other
+    </button>
+  </div>
+</section>
+
+<section className="map-preview-section">
+  <div className="top-places-panel">
+    <div className="top-places-header">
+      <h2>{filteredPlaces.length} places found</h2>
+      <p>Top study spots based on your filters</p>
+    </div>
+
+    <div className="top-places-list">
+      {filteredPlaces.slice(0, 4).map((place) => (
+        <Link
+          to={`/places/${place.id}`}
+          className="top-place-card"
+          key={place.id}
+        >
+          {place.image_url ? (
+            <img src={place.image_url} alt={place.name} />
+          ) : (
+            <div className="top-place-placeholder">No image</div>
+          )}
+
+          <div className="top-place-info">
+            <h3>{place.name}</h3>
+            <p>{place.city}, {place.country}</p>
+
+            <div className="top-place-rating">
+              <span className="score-badge">
+                {place.study_rating ? place.study_rating : "—"}
+              </span>
+              <span>
+                ⭐ {place.study_rating ? `${place.study_rating}/5` : "Not rated"}
+              </span>
             </div>
 
-            <div className="filter-buttons">
-              <button onClick={() => setSelectedCity("All")}>All</button>
-              <button onClick={() => setSelectedCity("Linz")}>Linz</button>
-              <button onClick={() => setSelectedCity("Istanbul")}>
-                Istanbul
-              </button>
+            <div className="top-place-tags">
+              {place.quiet && <span>Quiet</span>}
+              {place.wifi && <span>WiFi</span>}
+              {place.outlets && <span>Outlets</span>}
             </div>
+          </div>
+        </Link>
+      ))}
+    </div>
+  </div>
 
-            <div className="filter-buttons">
-              <button onClick={() => setSelectedCategory("All")}>
-                All categories
-              </button>
-              <button onClick={() => setSelectedCategory("Library")}>
-                Library
-              </button>
-              <button onClick={() => setSelectedCategory("Cafe")}>Cafe</button>
-              <button onClick={() => setSelectedCategory("University")}>
-                University
-              </button>
-              <button onClick={() => setSelectedCategory("Other")}>
-                Other
-              </button>
-            </div>
+  <div className="map-panel">
+    <StudyMap
+      places={filteredPlaces}
+      onSelectPlace={setSelectedPlace}
+    />
+  </div>
+</section>
 
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Search study spots..."
-                value={searchText}
-                onChange={(event) => setSearchText(event.target.value)}
-              />
-            </div>
-
-            
-
-            <StudyMap
-                  places={filteredPlaces}
-                  onSelectPlace={setSelectedPlace}
-                />
-
-            {selectedPlace ? (
-              <PlaceDetails
-                place={selectedPlace}
-                onClose={() => setSelectedPlace(null)}
-                session={session}
-/>
-            ) : (
-              <PlaceList
-                places={filteredPlaces}
-                onSelectPlace={setSelectedPlace}
-              />
-            )}
+            <PlaceList places={filteredPlaces} />
           </div>
         }
       />
 
       <Route path="/login" element={<LoginPage session={session} />} />
+      <Route path="/places/:id" element={<PlacePage session={session} />} />
     </Routes>
   </BrowserRouter>
 );

@@ -98,6 +98,11 @@ async function fetchReviews() {
 
   setReviews(reviewsWithProfiles);
 }
+useEffect(() => {
+  if (place?.id) {
+    fetchReviews();
+  }
+}, [place?.id]);
 
   return (
     <div className="place-details">

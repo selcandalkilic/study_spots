@@ -28,7 +28,10 @@ function Navbar({ searchText, setSearchText, session }) {
 
         {session ? (
           <>
-            <span className="navbar-user">{session.user.email}</span>
+            <Link to="/profile" className="navbar-profile-link">
+              My Profile
+            </Link>
+
             <button
               className="navbar-link-button"
               onClick={() => supabase.auth.signOut()}

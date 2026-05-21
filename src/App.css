@@ -2764,3 +2764,19 @@ body {
     font-size: 13px !important;
   }
 }
+.review-price-button,
+.price-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  line-height: 1 !important;
+  padding: 0 !important;
+}
+.improved-review-form textarea,
+.review-form textarea {
+  background: white !important;
+  color: #1f1630 !important;
+  -webkit-text-fill-color: #1f1630 !important;
+  caret-color: #1f1630 !important;
+}

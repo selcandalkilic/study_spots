@@ -143,10 +143,8 @@ return (
 
           <section className="hero-section">
   <div className="hero-text">
-    <h1>Find the perfect place to focus.</h1>
-    <p>
-      Discover study-friendly cafes, libraries, and workspaces in Linz, Vienna and Istanbul.
-    </p>
+      <h1>{t.heroTitle}</h1>
+      <p>{t.heroSubtitle}</p>
   </div>
 </section>
 
@@ -156,7 +154,7 @@ return (
       className={selectedCity === "All" ? "filter-chip active" : "filter-chip"}
       onClick={() => setSelectedCity("All")}
     >
-      All
+      {t.all}
     </button>
 
     <button
@@ -230,16 +228,14 @@ return (
     </button>
   </div>
 </section>
-      <p>
-        Debug city: {selectedCity} | category: {selectedCategory} | filtered:{" "}
-        {filteredPlaces.length}
-      </p>
 
 <section className="map-preview-section">
   <div className="top-places-panel">
     <div className="top-places-header">
-      <h2>{filteredPlaces.length} places found</h2>
-      <p>Top study spots based on your filters</p>
+      <h2>
+        {filteredPlaces.length} {t.placesFound}
+      </h2>
+      <p>{t.topPlaces}</p>
     </div>
 
     <div className="top-places-list">

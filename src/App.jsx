@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import PlacePage from "./pages/PlacePage";
 import Navbar from "./components/Navbar";
 import ProfilePage from "./pages/ProfilePage";
+import AddSpotPage from "./pages/AddSpotPage";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -244,6 +245,7 @@ return (
       <Route path="/login" element={<LoginPage session={session} />} />
       <Route path="/places/:id" element={<PlacePage session={session} />} />
       <Route path="/profile" element={<ProfilePage session={session} />} />
+      <Route path="/add-spot" element={<AddSpotPage session={session} />} />
     </Routes>
   </BrowserRouter>
 );

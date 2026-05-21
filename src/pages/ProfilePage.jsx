@@ -9,10 +9,15 @@ function ProfilePage({ session }) {
     bio: "",
     city: "",
     avatar_url: "",
+    role: "",
+    school_or_workplace: "",
+    study_field: "",
+    favorite_study_type: "",
   });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -36,6 +41,10 @@ function ProfilePage({ session }) {
           bio: data.bio || "",
           city: data.city || "",
           avatar_url: data.avatar_url || "",
+          role: data.role || "",
+          school_or_workplace: data.school_or_workplace || "",
+          study_field: data.study_field || "",
+          favorite_study_type: data.favorite_study_type || "",
         });
       }
 
@@ -44,6 +53,42 @@ function ProfilePage({ session }) {
 
     fetchProfile();
   }, [session]);
+
+  async function uploadAvatar(event) {
+    const file = event.target.files[0];
+
+    if (!file || !session) {
+      return;
+    }
+
+    setUploading(true);
+
+    const fileExtension = file.name.split(".").pop();
+    const filePath = `${session.user.id}/avatar.${fileExtension}`;
+
+    const { error } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, file, {
+        upsert: true,
+      });
+
+    if (error) {
+      alert(error.message);
+      setUploading(false);
+      return;
+    }
+
+    const { data } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(filePath);
+
+    setProfile({
+      ...profile,
+      avatar_url: data.publicUrl,
+    });
+
+    setUploading(false);
+  }
 
   async function saveProfile(event) {
     event.preventDefault();
@@ -62,6 +107,10 @@ function ProfilePage({ session }) {
       bio: profile.bio,
       city: profile.city,
       avatar_url: profile.avatar_url,
+      role: profile.role,
+      school_or_workplace: profile.school_or_workplace,
+      study_field: profile.study_field,
+      favorite_study_type: profile.favorite_study_type,
       updated_at: new Date().toISOString(),
     });
 
@@ -119,6 +168,17 @@ function ProfilePage({ session }) {
         </div>
 
         <form className="profile-form" onSubmit={saveProfile}>
+          <div className="profile-upload-box">
+            <label className="profile-upload-label">Profile picture</label>
+
+            <label className="profile-upload-button">
+              Choose image
+              <input type="file" accept="image/*" onChange={uploadAvatar} />
+            </label>
+
+            {uploading && <p className="profile-uploading-text">Uploading image...</p>}
+          </div>
+
           <label>Username</label>
           <input
             type="text"
@@ -149,15 +209,60 @@ function ProfilePage({ session }) {
             }
           />
 
-          <label>Profile picture URL</label>
+          <label>Role</label>
+          <select
+            value={profile.role}
+            onChange={(e) =>
+              setProfile({ ...profile, role: e.target.value })
+            }
+          >
+            <option value="">Prefer not to say</option>
+            <option value="Student">Student</option>
+            <option value="Worker">Worker</option>
+            <option value="Student worker">Student worker</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <label>School / University / Workplace</label>
           <input
             type="text"
-            placeholder="Paste an image URL for now"
-            value={profile.avatar_url}
+            placeholder="Example: JKU, TU Wien, Istanbul University..."
+            value={profile.school_or_workplace}
             onChange={(e) =>
-              setProfile({ ...profile, avatar_url: e.target.value })
+              setProfile({
+                ...profile,
+                school_or_workplace: e.target.value,
+              })
             }
           />
+
+          <label>Study field or job area</label>
+          <input
+            type="text"
+            placeholder="Example: Computer Science, Design, Medicine..."
+            value={profile.study_field}
+            onChange={(e) =>
+              setProfile({ ...profile, study_field: e.target.value })
+            }
+          />
+
+          <label>Favorite study type</label>
+          <select
+            value={profile.favorite_study_type}
+            onChange={(e) =>
+              setProfile({
+                ...profile,
+                favorite_study_type: e.target.value,
+              })
+            }
+          >
+            <option value="">Choose one</option>
+            <option value="Quiet solo study">Quiet solo study</option>
+            <option value="Group study">Group study</option>
+            <option value="Cafe study">Cafe study</option>
+            <option value="Library study">Library study</option>
+            <option value="Late night study">Late night study</option>
+          </select>
 
           <label>Bio</label>
           <textarea

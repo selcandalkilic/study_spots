@@ -18,7 +18,9 @@ function Navbar({ searchText, setSearchText, session }) {
       </div>
 
       <div className="navbar-links">
-        <button className="navbar-link-button">Add a Spot</button>
+        <Link to="/add-spot" className="navbar-add-link">
+          Add a Spot
+        </Link>
 
         <select className="navbar-select">
           <option>EN</option>

@@ -1,4 +1,30 @@
-function PlaceDetails({ place, onClose }) {
+import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
+import ReviewForm from "./ReviewForm";
+
+function PlaceDetails({ place, onClose, session }) {
+  const [reviews, setReviews] = useState([]);
+
+  async function fetchReviews() {
+    if (!place) return;
+
+    const { data, error } = await supabase
+      .from("reviews")
+      .select("*")
+      .eq("place_id", place.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.log("Review fetch error:", error);
+    } else {
+      setReviews(data);
+    }
+  }
+
+  useEffect(() => {
+    fetchReviews();
+  }, [place]);
+
   if (!place) {
     return null;
   }
@@ -6,17 +32,17 @@ function PlaceDetails({ place, onClose }) {
   return (
     <div className="place-details">
       <button onClick={onClose}>← Back to list</button>
+
       {place.image_url ? (
-  <img
-    className="place-hero-image"
-    src={place.image_url}
-    alt={place.name}
-  />
-) : (
-  <div className="place-image-placeholder">
-    No image added yet
-  </div>
-)}
+        <img
+          className="place-hero-image"
+          src={place.image_url}
+          alt={place.name}
+        />
+      ) : (
+        <div className="place-image-placeholder">No image added yet</div>
+      )}
+
       <div className="place-detail-header">
         <div>
           <h2>{place.name}</h2>
@@ -24,10 +50,12 @@ function PlaceDetails({ place, onClose }) {
             {place.category} · {place.city}, {place.country}
           </p>
         </div>
+
         <div className="place-detail-rating">
           ⭐ {place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}
         </div>
       </div>
+
       <p className="place-detail-description">{place.description}</p>
 
       <div className="details-grid">
@@ -51,9 +79,9 @@ function PlaceDetails({ place, onClose }) {
           <p>{place.category}</p>
         </div>
 
-       <div>
-            <strong>Study rating</strong>
-            <p>{place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
+        <div>
+          <strong>Study rating</strong>
+          <p>{place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
         </div>
 
         <div>
@@ -103,19 +131,25 @@ function PlaceDetails({ place, onClose }) {
       </div>
 
       <div className="reviews-section">
+        <ReviewForm
+          placeId={place.id}
+          session={session}
+          onReviewAdded={fetchReviews}
+        />
+
         <h3>Reviews</h3>
 
-        {place.reviews && place.reviews.length > 0 ? (
-          place.reviews.map((review) => (
-            <div className="review-card" key={review.id}>
-            <strong>Anonymous user</strong>
-            <p>{review.rating ? `${review.rating}/5` : "No rating"}</p>
-            <p>{review.comment}</p>
-            <small>{new Date(review.created_at).toLocaleDateString()}</small>
+        {reviews.length === 0 ? (
+          <p>No reviews yet.</p>
+        ) : (
+          reviews.map((review) => (
+            <div key={review.id} className="review-card">
+              <strong>Anonymous user</strong>
+              <p>{"⭐".repeat(review.rating)} {review.rating}/5</p>
+              <p>{review.comment}</p>
+              <small>{new Date(review.created_at).toLocaleDateString()}</small>
             </div>
           ))
-        ) : (
-          <p>No reviews yet.</p>
         )}
       </div>
     </div>

@@ -4,30 +4,91 @@ import ReviewForm from "./ReviewForm";
 
 function PlaceDetails({ place, onClose, session }) {
   const [reviews, setReviews] = useState([]);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+const [editRating, setEditRating] = useState(5);
+const [editComment, setEditComment] = useState("");
+const [editIsAnonymous, setEditIsAnonymous] = useState(false);
 
-  async function fetchReviews() {
-    if (!place) return;
+function startEditingReview(review) {
+  setEditingReviewId(review.id);
+  setEditRating(review.rating);
+  setEditComment(review.comment || "");
+  setEditIsAnonymous(review.is_anonymous || false);
+}
 
-    const { data, error } = await supabase
-      .from("reviews")
-      .select("*")
-      .eq("place_id", place.id)
-      .order("created_at", { ascending: false });
+async function updateReview(reviewId) {
+  const { error } = await supabase
+    .from("reviews")
+    .update({
+      rating: Number(editRating),
+      comment: editComment,
+      is_anonymous: editIsAnonymous,
+    })
+    .eq("id", reviewId);
 
-    if (error) {
-      console.log("Review fetch error:", error);
-    } else {
-      setReviews(data);
-    }
-  }
-
-  useEffect(() => {
+  if (error) {
+    alert(error.message);
+  } else {
+    setEditingReviewId(null);
     fetchReviews();
-  }, [place]);
-
-  if (!place) {
-    return null;
   }
+}
+
+async function deleteReview(reviewId) {
+  const confirmDelete = window.confirm("Delete this review?");
+
+  if (!confirmDelete) return;
+
+  const { error } = await supabase
+    .from("reviews")
+    .delete()
+    .eq("id", reviewId);
+
+  if (error) {
+    alert(error.message);
+  } else {
+    fetchReviews();
+  }
+}
+
+ async function fetchReviews() {
+  if (!place) return;
+
+  const { data: reviewsData, error: reviewsError } = await supabase
+    .from("reviews")
+    .select("*")
+    .eq("place_id", place.id)
+    .order("created_at", { ascending: false });
+
+  if (reviewsError) {
+    console.log("Review fetch error:", reviewsError);
+    return;
+  }
+
+  const userIds = reviewsData.map((review) => review.user_id);
+
+  const { data: profilesData, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, username, full_name")
+    .in("id", userIds);
+
+  if (profilesError) {
+    console.log("Profile fetch error:", profilesError);
+    setReviews(reviewsData);
+    return;
+  }
+
+  const reviewsWithProfiles = reviewsData.map((review) => {
+    const profile = profilesData.find((profile) => profile.id === review.user_id);
+
+    return {
+      ...review,
+      profile,
+    };
+  });
+
+  setReviews(reviewsWithProfiles);
+}
 
   return (
     <div className="place-details">
@@ -142,17 +203,66 @@ function PlaceDetails({ place, onClose, session }) {
         {reviews.length === 0 ? (
           <p>No reviews yet.</p>
         ) : (
-          reviews.map((review) => (
-            <div key={review.id} className="review-card">
-              <strong>Anonymous user</strong>
-             <p>
-              {"★".repeat(review.rating)}
-              {"☆".repeat(5 - review.rating)} {review.rating}/5
-            </p>
-              <p>{review.comment}</p>
-              <small>{new Date(review.created_at).toLocaleDateString()}</small>
+          reviews.map((review) => {
+  const isOwnReview = session && session.user.id === review.user_id;
+
+  const displayName = review.is_anonymous
+    ? "Anonymous user"
+    : review.profile?.username || "Study Spots user";
+
+  return (
+    <div key={review.id} className="review-card">
+      {editingReviewId === review.id ? (
+        <>
+          <select
+            value={editRating}
+            onChange={(e) => setEditRating(e.target.value)}
+          >
+            <option value="5">5 stars</option>
+            <option value="4">4 stars</option>
+            <option value="3">3 stars</option>
+            <option value="2">2 stars</option>
+            <option value="1">1 star</option>
+          </select>
+
+          <textarea
+            value={editComment}
+            onChange={(e) => setEditComment(e.target.value)}
+          />
+
+          <label className="anonymous-checkbox">
+            <input
+              type="checkbox"
+              checked={editIsAnonymous}
+              onChange={(e) => setEditIsAnonymous(e.target.checked)}
+            />
+            Hide my username
+          </label>
+
+          <button onClick={() => updateReview(review.id)}>Save</button>
+          <button onClick={() => setEditingReviewId(null)}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <strong>{displayName}</strong>
+          <p>
+            {"★".repeat(review.rating)}
+            {"☆".repeat(5 - review.rating)} {review.rating}/5
+          </p>
+          <p>{review.comment}</p>
+          <small>{new Date(review.created_at).toLocaleDateString()}</small>
+
+          {isOwnReview && (
+            <div className="review-actions">
+              <button onClick={() => startEditingReview(review)}>Edit</button>
+              <button onClick={() => deleteReview(review.id)}>Delete</button>
             </div>
-          ))
+          )}
+        </>
+      )}
+    </div>
+  );
+})
         )}
       </div>
     </div>

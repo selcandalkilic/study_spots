@@ -2548,3 +2548,35 @@ body {
   border: none !important;
 }
 }
+.anonymous-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: #4d3b63;
+  font-weight: 700;
+}
+
+.anonymous-checkbox input {
+  width: auto;
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.review-actions button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd6e8;
+  background: white;
+  color: #4d3b63;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-actions button:hover {
+  background: #f5f1fa;
+}

@@ -4,6 +4,7 @@ import { supabase } from "../supabaseClient";
 function ReviewForm({ placeId, session, onReviewAdded }) {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [isAnonymous, setIsAnonymous] = useState(false);
 
   async function submitReview(event) {
     event.preventDefault();
@@ -19,6 +20,7 @@ function ReviewForm({ placeId, session, onReviewAdded }) {
         user_id: session.user.id,
         rating: Number(rating),
         comment: comment,
+        is_anonymous: isAnonymous,
       },
     ]);
 
@@ -48,7 +50,14 @@ function ReviewForm({ placeId, session, onReviewAdded }) {
         value={comment}
         onChange={(e) => setComment(e.target.value)}
       />
-
+      <label className="anonymous-checkbox">
+        <input
+          type="checkbox"
+          checked={isAnonymous}
+          onChange={(e) => setIsAnonymous(e.target.checked)}
+        />
+        Hide my username
+      </label>
       <button type="submit">Submit review</button>
     </form>
   );

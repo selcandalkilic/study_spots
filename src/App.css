@@ -2252,3 +2252,92 @@ body {
 .star-button:hover {
   color: #f5a623 !important;
 }
+
+.navbar {
+  width: 100%;
+  background: white;
+  border-bottom: 1px solid #eee8f6;
+}
+
+.navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.navbar-logo {
+  text-decoration: none;
+  color: #1f1630;
+  font-size: 18px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.desktop-search {
+  display: flex;
+  margin-left: auto;
+}
+
+.navbar-search input {
+  width: 260px;
+  padding: 12px 16px;
+  border: 1px solid #ddd6e8;
+  border-radius: 14px;
+  font-size: 15px;
+}
+
+.mobile-search-button {
+  display: none;
+  border: 1px solid #ddd6e8;
+  background: white;
+  border-radius: 14px;
+  padding: 10px 14px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.mobile-search-row {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-inner {
+    padding: 14px 16px;
+    gap: 12px;
+    justify-content: flex-start;
+  }
+
+  .desktop-search {
+    display: none;
+  }
+
+  .mobile-search-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-search-row {
+    display: block;
+    padding: 0 16px 16px;
+  }
+
+  .mobile-search-row input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    border: 1px solid #ddd6e8;
+    border-radius: 14px;
+    font-size: 15px;
+  }
+
+  .navbar-login-button,
+  .navbar-add-link,
+  .navbar-profile-link {
+    white-space: nowrap;
+  }
+}

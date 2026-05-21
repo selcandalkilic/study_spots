@@ -1,21 +1,42 @@
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import { useState } from "react";
 
 function Navbar({ searchText, setSearchText, session }) {
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
         📍 Study Spots
       </Link>
+      <>
+  <div className="navbar-search desktop-search">
+    <input
+      type="text"
+      placeholder="Search cafes, libraries, cities..."
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+    />
+  </div>
 
-      <div className="navbar-search">
-        <input
-          type="text"
-          placeholder="Search cafes, libraries, cities..."
-          value={searchText}
-          onChange={(event) => setSearchText(event.target.value)}
-        />
-      </div>
+  <button
+    className="mobile-search-button"
+    onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+    type="button"
+  >
+    🔍
+  </button>
+  {mobileSearchOpen && (
+  <div className="mobile-search-row">
+    <input
+      type="text"
+      placeholder="Search cafes, libraries, cities..."
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
+    />
+  </div>
+)}
+</>
 
       <div className="navbar-links">
         <Link to="/add-spot" className="navbar-add-link">

@@ -1,8 +1,37 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
 
+function StarRating({ label, value, onChange, max = 5, required = false }) {
+  return (
+    <div className="review-rating-field">
+      <label>
+        {label} {required && <span>*</span>}
+      </label>
+
+      <div className="review-stars">
+        {Array.from({ length: max }, (_, index) => index + 1).map((star) => (
+          <button
+            key={star}
+            type="button"
+            className={star <= value ? "review-star active" : "review-star"}
+            onClick={() => onChange(star)}
+          >
+            ★
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ReviewForm({ placeId, session, onReviewAdded }) {
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState(0);
+  const [wifiRating, setWifiRating] = useState(0);
+  const [outletsRating, setOutletsRating] = useState(0);
+  const [noiseRating, setNoiseRating] = useState(0);
+  const [seatingRating, setSeatingRating] = useState(0);
+  const [crowdednessRating, setCrowdednessRating] = useState(0);
+  const [priceRating, setPriceRating] = useState(0);
   const [comment, setComment] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
 
@@ -14,11 +43,22 @@ function ReviewForm({ placeId, session, onReviewAdded }) {
       return;
     }
 
+    if (rating === 0) {
+      alert("Please choose an overall rating.");
+      return;
+    }
+
     const { error } = await supabase.from("reviews").insert([
       {
         place_id: placeId,
         user_id: session.user.id,
         rating: Number(rating),
+        wifi_rating: wifiRating || null,
+        outlets_rating: outletsRating || null,
+        noise_rating: noiseRating || null,
+        seating_rating: seatingRating || null,
+        crowdedness_rating: crowdednessRating || null,
+        price_rating: priceRating || null,
         comment: comment,
         is_anonymous: isAnonymous,
       },
@@ -27,29 +67,97 @@ function ReviewForm({ placeId, session, onReviewAdded }) {
     if (error) {
       alert(error.message);
     } else {
-      setRating(5);
+      setRating(0);
+      setWifiRating(0);
+      setOutletsRating(0);
+      setNoiseRating(0);
+      setSeatingRating(0);
+      setCrowdednessRating(0);
+      setPriceRating(0);
       setComment("");
+      setIsAnonymous(false);
       onReviewAdded();
     }
   }
 
   return (
-    <form className="review-form" onSubmit={submitReview}>
-      <h3>Write a review</h3>
+    <form className="review-form improved-review-form" onSubmit={submitReview}>
+      <div className="review-form-header">
+        <h3>Write a review</h3>
+        <p>Only the overall rating is required. The rest is optional.</p>
+      </div>
 
-      <select value={rating} onChange={(e) => setRating(e.target.value)}>
-        <option value="5">5 stars</option>
-        <option value="4">4 stars</option>
-        <option value="3">3 stars</option>
-        <option value="2">2 stars</option>
-        <option value="1">1 star</option>
-      </select>
+      <StarRating
+        label="Overall study rating"
+        value={rating}
+        onChange={setRating}
+        required={true}
+      />
 
+      <div className="optional-review-section">
+        <h4>Optional details</h4>
+
+        <StarRating
+          label="WiFi quality"
+          value={wifiRating}
+          onChange={setWifiRating}
+        />
+
+        <StarRating
+          label="Power outlets"
+          value={outletsRating}
+          onChange={setOutletsRating}
+        />
+
+        <StarRating
+          label="Quietness"
+          value={noiseRating}
+          onChange={setNoiseRating}
+        />
+
+        <StarRating
+          label="Seating availability"
+          value={seatingRating}
+          onChange={setSeatingRating}
+        />
+
+        <StarRating
+          label="Crowdedness"
+          value={crowdednessRating}
+          onChange={setCrowdednessRating}
+        />
+
+        <div className="review-price-field">
+          <label>Price level</label>
+
+          <div className="review-price-buttons">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((number) => (
+              <button
+                key={number}
+                type="button"
+                className={
+                  number <= priceRating
+                    ? "review-price-button active"
+                    : "review-price-button"
+                }
+                onClick={() => setPriceRating(number)}
+              >
+                {number}
+              </button>
+            ))}
+          </div>
+
+          <p>1 = very cheap, 10 = very expensive</p>
+        </div>
+      </div>
+
+      <label>Comment</label>
       <textarea
-        placeholder="How was this study spot?"
+        placeholder="What should other students know about this place?"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
       />
+
       <label className="anonymous-checkbox">
         <input
           type="checkbox"
@@ -58,6 +166,7 @@ function ReviewForm({ placeId, session, onReviewAdded }) {
         />
         Hide my username
       </label>
+
       <button type="submit">Submit review</button>
     </form>
   );

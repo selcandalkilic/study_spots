@@ -2341,3 +2341,195 @@ body {
     white-space: nowrap;
   }
 }
+/* ===== Mobile responsive fixes ===== */
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .navbar {
+    height: auto;
+    padding: 0;
+  }
+
+  .navbar-inner {
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .navbar-logo {
+    font-size: 22px;
+    width: 100%;
+  }
+
+  .navbar-add-link,
+  .navbar-login-button,
+  .navbar-profile-link,
+  .navbar-link-button,
+  .navbar-select {
+    font-size: 14px;
+  }
+
+  .desktop-search,
+  .navbar-search {
+    display: none !important;
+  }
+
+  .mobile-search-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd6e8;
+    background: white;
+    border-radius: 14px;
+    padding: 10px 14px;
+  }
+
+  .mobile-search-row {
+    display: block;
+    width: 100%;
+    padding: 0 16px 16px;
+  }
+
+  .mobile-search-row input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #ddd6e8;
+    border-radius: 14px;
+  }
+
+  .hero-section {
+    margin: 42px auto 24px;
+    padding: 0 24px;
+  }
+
+  .hero-text h1 {
+    font-size: 44px;
+    line-height: 1.08;
+    letter-spacing: -1px;
+  }
+
+  .hero-text p {
+    font-size: 20px;
+    line-height: 1.55;
+  }
+
+  .filter-section {
+    padding: 0 24px;
+  }
+
+  .filter-group {
+    gap: 10px;
+  }
+
+  .filter-chip {
+    padding: 11px 16px;
+  }
+
+  .map-preview-section {
+    grid-template-columns: 1fr !important;
+    padding: 0 24px;
+    gap: 20px;
+  }
+
+  .top-places-panel {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .top-place-card {
+    grid-template-columns: 90px 1fr;
+  }
+
+  .map-panel {
+    min-height: 380px;
+  }
+
+  .map-panel .leaflet-container {
+    height: 380px !important;
+  }
+
+  .places-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .place-card {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .place-page,
+  .profile-page,
+  .add-spot-page {
+    padding: 24px 16px;
+  }
+
+  .place-details,
+  .profile-card,
+  .add-spot-card {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 22px;
+  }
+
+  .place-detail-header {
+    flex-direction: column;
+  }
+
+  .place-detail-header h2 {
+    font-size: 30px;
+  }
+
+  .details-grid,
+  .form-two-columns,
+  .checkbox-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .place-hero-image,
+  .place-image-placeholder {
+    height: 240px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-header h1 {
+    font-size: 34px;
+  }
+
+  .add-spot-form button,
+  .profile-form button,
+  .review-form button {
+    width: 100%;
+  }
+}
+/* ===== Fix profile form text visibility ===== */
+
+.profile-form input,
+.profile-form textarea,
+.profile-form select {
+  color: #1f1630 !important;
+  -webkit-text-fill-color: #1f1630 !important;
+  background-color: white !important;
+  text-align: left !important;
+  direction: ltr !important;
+  caret-color: #1f1630 !important;
+  font-family: inherit !important;
+  letter-spacing: normal !important;
+  text-indent: 0 !important;
+}
+
+.profile-form input::placeholder,
+.profile-form textarea::placeholder {
+  color: #9a90a8 !important;
+  -webkit-text-fill-color: #9a90a8 !important;
+  opacity: 1 !important;
+}

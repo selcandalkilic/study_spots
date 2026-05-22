@@ -3129,3 +3129,26 @@ body {
   display: block;
   object-fit: contain;
 }
+.review-price-buttons .review-price-button {
+  width: 42px !important;
+  min-width: 42px !important;
+  max-width: 42px !important;
+
+  height: 42px !important;
+  min-height: 42px !important;
+  max-height: 42px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  flex: 0 0 42px !important;
+  box-sizing: border-box !important;
+
+  border-radius: 999px;
+  font-size: 18px;
+  line-height: 1;
+}

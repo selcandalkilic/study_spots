@@ -892,6 +892,17 @@ section {
   margin: 28px auto 32px;
   padding: 0 24px;
 }
+.filter-section,
+.filter-card {
+  overflow: visible;
+}
+
+.filter-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
 
 .filter-card {
   background: rgba(255, 255, 255, 0.92);
@@ -957,6 +968,7 @@ section {
   overflow-x: auto;
   padding: 2px 2px 8px;
   scrollbar-width: none;
+  max-width: 100%;
 }
 
 .chip-scroll::-webkit-scrollbar {
@@ -1000,6 +1012,7 @@ section {
 .rating-filter-wrapper {
   position: relative;
   flex: 0 0 auto;
+  z-index: 100;
 }
 
 .rating-popover {
@@ -1012,7 +1025,7 @@ section {
   border-radius: 18px;
   padding: 12px;
   box-shadow: 0 20px 45px rgba(64, 42, 88, 0.18);
-  z-index: 50;
+  z-index: 9999;
 }
 
 .rating-popover p {
@@ -3487,4 +3500,65 @@ body {
     text-align: center;
     box-sizing: border-box;
   }
+}
+/* New homepage filter fixes */
+.filter-section {
+  max-width: 1120px;
+  margin: 28px auto 32px;
+  padding: 0 24px;
+  position: relative;
+  z-index: 1000;
+  overflow: visible;
+}
+
+.filter-card {
+  position: relative;
+  overflow: visible;
+}
+
+.filter-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  flex-wrap: nowrap;
+}
+
+.chip-scroll {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  scrollbar-width: none;
+  max-width: 100%;
+}
+
+.rating-filter-wrapper {
+  position: relative;
+  flex: 0 0 auto;
+  z-index: 1001;
+}
+
+.rating-popover {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  width: 190px;
+  background: #ffffff;
+  border: 1px solid #e8deef;
+  border-radius: 18px;
+  padding: 12px;
+  box-shadow: 0 20px 45px rgba(64, 42, 88, 0.18);
+  z-index: 99999;
+}
+.rating-popover {
+  pointer-events: auto;
+}
+
+.rating-option,
+.clear-rating {
+  pointer-events: auto;
+  position: relative;
+  z-index: 100000;
 }

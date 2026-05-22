@@ -137,8 +137,10 @@ const filteredPlaces = places.filter((place) => {
   const cityMatches =
     selectedCity === "All" || place.city === selectedCity;
 
-  const ratingMatches =
-    !selectedRating || Number(place.rating) >= selectedRating;
+  const placeRating = Number(place.study_rating || 0);
+
+const ratingMatches = 
+!selectedRating || placeRating >= selectedRating;
 
   const featureMatches = selectedFeatures.every((feature) => {
     if (feature === "Wi-Fi") return place.wifi === true;

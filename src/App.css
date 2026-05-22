@@ -3214,3 +3214,36 @@ body {
   width: 100%;
 }
 }
+.hero-search {
+  margin-top: 28px;
+  width: 100%;
+  max-width: 520px;
+}
+
+.hero-search input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 1px solid #ddd6e8;
+  border-radius: 18px;
+  font-size: 16px;
+  color: #241832;
+  background: white;
+  outline: none;
+}
+
+.hero-search input:focus {
+  border-color: #74598d;
+  box-shadow: 0 0 0 3px rgba(116, 89, 141, 0.12);
+}
+
+@media (max-width: 900px) {
+  .hero-search {
+    max-width: 100%;
+    margin-top: 24px;
+  }
+
+  .hero-search input {
+    font-size: 15px;
+    padding: 15px 18px;
+  }
+}

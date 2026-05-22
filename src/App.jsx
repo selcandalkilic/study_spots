@@ -159,18 +159,24 @@ return (
         element={
          <div>
          <Navbar
-          searchText={searchText}
-          setSearchText={setSearchText}
-          session={session}
-          language={language}
-          setLanguage={setLanguage}
-          isAdmin={isAdmin}
-        />
+         session={session}
+         language={language}
+         setLanguage={setLanguage}
+         isAdmin={isAdmin}
+         />
 
           <section className="hero-section">
   <div className="hero-text">
       <h1>{t.heroTitle}</h1>
       <p>{t.heroSubtitle}</p>
+      <div className="hero-search">
+  <input
+    type="text"
+    placeholder="Search cafes, libraries, cities..."
+    value={searchText}
+    onChange={(e) => setSearchText(e.target.value)}
+  />
+</div>
   </div>
 </section>
 

@@ -3104,3 +3104,15 @@ body {
     right: 0;
   }
 }
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navbar-logo-img {
+  height: 48px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}

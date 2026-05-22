@@ -3,8 +3,7 @@ import { supabase } from "../supabaseClient";
 import { useState, useEffect } from "react";
 import logo from "../assets/study-spots-logo.png";
 
-function Navbar({ searchText, setSearchText, session, language, setLanguage, isAdmin }) {
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+function Navbar({ session, language, setLanguage, isAdmin }) {
   const [profile, setProfile] = useState(null);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
@@ -34,32 +33,6 @@ function Navbar({ searchText, setSearchText, session, language, setLanguage, isA
         <img src={logo} alt="Study Spots" className="navbar-logo-img" />
       </Link>
       <>
-  <div className="navbar-search desktop-search">
-    <input
-      type="text"
-      placeholder="Search cafes, libraries, cities..."
-      value={searchText}
-      onChange={(e) => setSearchText(e.target.value)}
-    />
-  </div>
-
-  <button
-    className="mobile-search-button"
-    onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-    type="button"
-  >
-    🔍
-  </button>
-  {mobileSearchOpen && (
-  <div className="mobile-search-row">
-    <input
-      type="text"
-      placeholder="Search cafes, libraries, cities..."
-      value={searchText}
-      onChange={(e) => setSearchText(e.target.value)}
-    />
-  </div>
-)}
 </>
 
       <div className="navbar-links">

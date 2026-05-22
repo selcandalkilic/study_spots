@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useEffect, useState } from "react";
+import "../admin.css";
 
 function ImportOsmPage({ session }) {
   const [city, setCity] = useState("Linz");
@@ -123,15 +124,19 @@ function ImportOsmPage({ session }) {
   return (
     <div className="import-page">
       <div className="import-card">
-        
-        <Link to="/" className="back-home-link">
-          ← Back to homepage
-        </Link>
+       
+       <div className="admin-topbar">
+  <Link to="/" className="admin-back-link">
+    ← Back to homepage
+  </Link>
 
-       <h1>Admin Dashboard</h1>
-            <p>
-            Import study spots from OpenStreetMap and manage imported data.
-            </p>
+  <span className="admin-pill">Admin only</span>
+</div>
+
+<h1>Admin Dashboard</h1>
+<p>
+  Import places from OpenStreetMap, review imported data, and manage study spot content.
+</p>
 
         {!session && (
           <p className="import-warning">
@@ -140,17 +145,35 @@ function ImportOsmPage({ session }) {
         )}
 
         <div className="import-form">
-          <label>City</label>
-          <input
+         <label>City</label>
+          <select
             value={city}
-            onChange={(event) => setCity(event.target.value)}
-          />
+            onChange={(event) => {
+              const selectedCity = event.target.value;
+              setCity(selectedCity);
+
+              if (selectedCity === "Linz" || selectedCity === "Vienna") {
+                setCountry("Austria");
+              }
+
+              if (selectedCity === "Istanbul") {
+                setCountry("Turkey");
+              }
+            }}
+          >
+            <option value="Linz">Linz</option>
+            <option value="Vienna">Vienna</option>
+            <option value="Istanbul">Istanbul</option>
+          </select>
 
           <label>Country</label>
-          <input
+          <select
             value={country}
             onChange={(event) => setCountry(event.target.value)}
-          />
+          >
+            <option value="Austria">Austria</option>
+            <option value="Turkey">Turkey</option>
+          </select>
 
           <label>Category</label>
           <select

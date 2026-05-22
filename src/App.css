@@ -2692,7 +2692,8 @@ body {
 .review-price-buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 3px;
+  align-items: center;
 }
 
 .review-price-button {
@@ -3130,9 +3131,9 @@ body {
   object-fit: contain;
 }
 .review-price-buttons .review-price-button {
-  width: 32px !important;
-  min-width: 32px !important;
-  max-width: 32px !important;
+  width: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
 
   height: 48px !important;
   min-height: 48px !important;
@@ -3145,10 +3146,10 @@ body {
   align-items: center !important;
   justify-content: center !important;
 
-  flex: 0 0 32px !important;
+  flex: 0 0 26px !important;
   box-sizing: border-box !important;
 
   border-radius: 999px;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 1;
 }

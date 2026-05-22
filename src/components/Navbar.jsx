@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Navbar({ searchText, setSearchText, session, language, setLanguage, isAdmin }) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -27,7 +27,6 @@ function Navbar({ searchText, setSearchText, session, language, setLanguage, isA
 
     fetchProfile();
   }, [session]);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">

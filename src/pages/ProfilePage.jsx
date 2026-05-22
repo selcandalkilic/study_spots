@@ -169,15 +169,15 @@ function ProfilePage({ session }) {
 
         <form className="profile-form" onSubmit={saveProfile}>
           <div className="profile-upload-box">
-            <label className="profile-upload-label">Profile picture</label>
+          <label className="profile-upload-label">Profile picture</label>
 
-            <label className="profile-upload-button">
-              Choose image
-              <input type="file" accept="image/*" onChange={uploadAvatar} />
-            </label>
+          <label className="profile-upload-button">
+            Choose image
+            <input type="file" accept="image/*" onChange={uploadAvatar} />
+          </label>
 
-            {uploading && <p className="profile-uploading-text">Uploading image...</p>}
-          </div>
+          {uploading && <p className="profile-uploading-text">Uploading image...</p>}
+        </div>
 
           <label>Username</label>
           <input

@@ -2780,3 +2780,44 @@ body {
   -webkit-text-fill-color: #1f1630 !important;
   caret-color: #1f1630 !important;
 }
+/* ===== Fix invisible input text on mobile ===== */
+
+.add-spot-form input,
+.add-spot-form textarea,
+.add-spot-form select,
+.profile-form input,
+.profile-form textarea,
+.profile-form select,
+.review-form input,
+.review-form textarea,
+.review-form select {
+  color: #1f1630 !important;
+  -webkit-text-fill-color: #1f1630 !important;
+  background-color: #ffffff !important;
+  caret-color: #6f5b86 !important;
+  text-align: left !important;
+  direction: ltr !important;
+  font-family: inherit !important;
+  letter-spacing: normal !important;
+  text-indent: 0 !important;
+}
+
+.add-spot-form input::placeholder,
+.add-spot-form textarea::placeholder,
+.profile-form input::placeholder,
+.profile-form textarea::placeholder,
+.review-form input::placeholder,
+.review-form textarea::placeholder {
+  color: #9a90a8 !important;
+  -webkit-text-fill-color: #9a90a8 !important;
+  opacity: 1 !important;
+}
+.add-spot-form input,
+.add-spot-form textarea,
+.profile-form input,
+.profile-form textarea,
+.review-form input,
+.review-form textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}

@@ -3130,13 +3130,13 @@ body {
   object-fit: contain;
 }
 .review-price-buttons .review-price-button {
-  width: 42px !important;
-  min-width: 42px !important;
-  max-width: 42px !important;
+  width: 32px !important;
+  min-width: 32px !important;
+  max-width: 32px !important;
 
-  height: 42px !important;
-  min-height: 42px !important;
-  max-height: 42px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
 
   padding: 0 !important;
   margin: 0 !important;
@@ -3145,7 +3145,7 @@ body {
   align-items: center !important;
   justify-content: center !important;
 
-  flex: 0 0 42px !important;
+  flex: 0 0 32px !important;
   box-sizing: border-box !important;
 
   border-radius: 999px;

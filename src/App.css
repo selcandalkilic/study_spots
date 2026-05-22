@@ -3158,7 +3158,7 @@ body {
     display: grid;
     grid-template-columns: repeat(5, 26px);
     gap: 4px;
-    justify-content: start;
+    justify-content: center;
   }
 
   .review-price-buttons .review-price-button {

@@ -3238,11 +3238,16 @@ body {
 
 @media (max-width: 900px) {
   .hero-search {
+    width: 100%;
     max-width: 100%;
     margin-top: 24px;
+    box-sizing: border-box;
   }
 
   .hero-search input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     font-size: 15px;
     padding: 15px 18px;
   }

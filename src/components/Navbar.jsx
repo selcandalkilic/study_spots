@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useState } from "react";
 
-function Navbar({ searchText, setSearchText, session, language, setLanguage }) {
+function Navbar({ searchText, setSearchText, session, language, setLanguage, isAdmin }) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   return (
     <nav className="navbar">
@@ -55,9 +55,15 @@ function Navbar({ searchText, setSearchText, session, language, setLanguage }) {
 
         {session ? (
           <>
+          {isAdmin && (
+          <Link to="/import-osm" className="navbar-admin-link">
+            Admin
+          </Link>
+        )}
             <Link to="/profile" className="navbar-profile-link">
               My Profile
             </Link>
+            
 
             <button
               className="navbar-link-button"

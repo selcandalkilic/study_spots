@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage";
 import AddSpotPage from "./pages/AddSpotPage";
 import ImportOsmPage from "./pages/ImportOsmPage";
 
+
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -21,6 +22,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState(null);
   const [language, setLanguage] = useState("EN");
+  const [isAdmin, setIsAdmin] = useState(false);
   const text = {
   EN: {
     heroTitle: "Find the perfect place to focus.",
@@ -100,7 +102,29 @@ useEffect(() => {
   return () => subscription.unsubscribe();
 }, []);
 
+useEffect(() => {
+  async function checkAdmin() {
+    if (!session) {
+      setIsAdmin(false);
+      return;
+    }
 
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("is_admin")
+      .eq("id", session.user.id)
+      .single();
+
+    if (error) {
+      console.log("Admin check error:", error);
+      setIsAdmin(false);
+    } else {
+      setIsAdmin(data?.is_admin === true);
+    }
+  }
+
+  checkAdmin();
+}, [session]);
 
 const filteredPlaces = places.filter((place) => {
   const cityMatches =
@@ -134,13 +158,14 @@ return (
         path="/"
         element={
          <div>
-          <Navbar
-            searchText={searchText}
-            setSearchText={setSearchText}
-            session={session}
-            language={language}
-            setLanguage={setLanguage}
-          />
+         <Navbar
+          searchText={searchText}
+          setSearchText={setSearchText}
+          session={session}
+          language={language}
+          setLanguage={setLanguage}
+          isAdmin={isAdmin}
+        />
 
           <section className="hero-section">
   <div className="hero-text">

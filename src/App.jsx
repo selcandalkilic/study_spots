@@ -1,3 +1,4 @@
+import FilterSection from "./components/FilterSection";
 import { useEffect, useState } from "react";
 import StudyMap from "./components/StudyMap";
 import "./App.css";
@@ -22,6 +23,8 @@ function App() {
   const [session, setSession] = useState(null);
   const [language, setLanguage] = useState("EN");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [selectedFeatures, setSelectedFeatures] = useState([]);
+  const [selectedRating, setSelectedRating] = useState(null);
   const text = {
   EN: {
     heroTitle: "Find the perfect place to focus.",
@@ -126,24 +129,28 @@ useEffect(() => {
 }, [session]);
 
 const filteredPlaces = places.filter((place) => {
+  const searchMatches =
+    place.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+    place.city?.toLowerCase().includes(searchText.toLowerCase()) ||
+    place.category?.toLowerCase().includes(searchText.toLowerCase());
+
   const cityMatches =
     selectedCity === "All" || place.city === selectedCity;
 
-  const categoryMatches =
-    selectedCategory === "All" || place.category === selectedCategory;
+  const ratingMatches =
+    !selectedRating || Number(place.rating) >= selectedRating;
 
-  const name = place.name || "";
-  const city = place.city || "";
-  const category = place.category || "";
-  const description = place.description || "";
+  const featureMatches = selectedFeatures.every((feature) => {
+    if (feature === "Wi-Fi") return place.wifi === true;
+    if (feature === "Outlets") return place.outlets === true;
+    if (feature === "Quiet") return place.quiet === true;
+    if (feature === "Laptop Friendly") return place.laptop_friendly === true;
+    if (feature === "Long Study Friendly") return place.long_study_friendly === true;
 
-  const searchMatches =
-    name.toLowerCase().includes(searchText.toLowerCase()) ||
-    city.toLowerCase().includes(searchText.toLowerCase()) ||
-    category.toLowerCase().includes(searchText.toLowerCase()) ||
-    description.toLowerCase().includes(searchText.toLowerCase());
+    return true;
+  });
 
-  return cityMatches && categoryMatches && searchMatches;
+  return searchMatches && cityMatches && ratingMatches && featureMatches;
 });
 
 if (loading) {
@@ -183,86 +190,16 @@ return (
   </div>
 </section>
 
-<section className="filter-section">
-  <div className="filter-group">
-    <button
-      className={selectedCity === "All" ? "filter-chip active" : "filter-chip"}
-      onClick={() => setSelectedCity("All")}
-    >
-      {t.all}
-    </button>
-
-    <button
-      className={selectedCity === "Linz" ? "filter-chip active" : "filter-chip"}
-      onClick={() => setSelectedCity("Linz")}
-    >
-      Linz
-    </button>
-
-    <button
-      className={
-        selectedCity === "Istanbul" ? "filter-chip active" : "filter-chip"
-      }
-      onClick={() => setSelectedCity("Istanbul")}
-    >
-      Istanbul
-    </button>
-
-    <button
-      className={selectedCity === "Vienna" ? "filter-chip active" : "filter-chip"}
-      onClick={() => setSelectedCity("Vienna")}
-    >
-      Vienna
-    </button>
-  </div>
-
-  <div className="filter-group">
-    <button
-      className={
-        selectedCategory === "All" ? "filter-chip active" : "filter-chip"
-      }
-      onClick={() => setSelectedCategory("All")}
-    >
-      All categories
-    </button>
-
-    <button
-      className={
-        selectedCategory === "Library" ? "filter-chip active" : "filter-chip"
-      }
-      onClick={() => setSelectedCategory("Library")}
-    >
-      Library
-    </button>
-
-    <button
-      className={
-        selectedCategory === "Cafe" ? "filter-chip active" : "filter-chip"
-      }
-      onClick={() => setSelectedCategory("Cafe")}
-    >
-      Cafe
-    </button>
-
-    <button
-      className={
-        selectedCategory === "University" ? "filter-chip active" : "filter-chip"
-      }
-      onClick={() => setSelectedCategory("University")}
-    >
-      University
-    </button>
-
-    <button
-      className={
-        selectedCategory === "Other" ? "filter-chip active" : "filter-chip"
-      }
-      onClick={() => setSelectedCategory("Other")}
-    >
-      Other
-    </button>
-  </div>
-</section>
+<FilterSection
+  searchText={searchText}
+  setSearchText={setSearchText}
+  selectedCity={selectedCity}
+  setSelectedCity={setSelectedCity}
+  selectedFeatures={selectedFeatures}
+  setSelectedFeatures={setSelectedFeatures}
+  selectedRating={selectedRating}
+  setSelectedRating={setSelectedRating}
+/>
 
 <section className="map-preview-section">
   <div className="top-places-panel">

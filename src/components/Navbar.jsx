@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useState, useEffect } from "react";
+import logo from "../assets/study-spots-logo.png";
 
 function Navbar({ searchText, setSearchText, session, language, setLanguage, isAdmin }) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -30,7 +31,7 @@ function Navbar({ searchText, setSearchText, session, language, setLanguage, isA
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
-        📍 Study Spots
+        <img src={logo} alt="Study Spots" className="navbar-logo-img" />
       </Link>
       <>
   <div className="navbar-search desktop-search">

@@ -310,6 +310,7 @@ button {
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
+  min-height: 90px;
 }
 
 .navbar-logo {
@@ -3112,6 +3113,18 @@ body {
 
 .navbar-logo-img {
   height: 48px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navbar-logo-img {
+  height: 100px;
   width: auto;
   display: block;
   object-fit: contain;

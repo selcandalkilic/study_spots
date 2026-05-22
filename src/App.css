@@ -2821,3 +2821,147 @@ body {
   -webkit-appearance: none;
   appearance: none;
 }
+/* ===== Admin dashboard dark theme ===== */
+
+.admin-page,
+.import-page {
+  min-height: 100vh;
+  padding: 48px 24px;
+  background:
+    radial-gradient(circle at top left, rgba(151, 117, 250, 0.25), transparent 30%),
+    linear-gradient(135deg, #12091f 0%, #1e1230 45%, #2c1a45 100%);
+  color: #f8f4ff;
+}
+
+.admin-shell,
+.import-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(238, 232, 246, 0.18);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+}
+
+.import-card h1,
+.admin-shell h1 {
+  margin: 0 0 12px;
+  font-size: 42px;
+  color: #ffffff;
+  letter-spacing: -1px;
+}
+
+.import-card p,
+.admin-shell p {
+  color: #cfc3df;
+  line-height: 1.6;
+}
+
+.import-form {
+  margin-top: 28px;
+  padding: 24px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(238, 232, 246, 0.14);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  align-items: end;
+}
+
+.import-form label {
+  display: block;
+  color: #e9ddff;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.import-form input,
+.import-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 13px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(238, 232, 246, 0.22);
+  background: rgba(255, 255, 255, 0.11);
+  color: #ffffff;
+  outline: none;
+}
+
+.import-form input::placeholder {
+  color: #b9abc9;
+}
+
+.import-form button,
+.import-result-card button,
+.admin-back-link {
+  padding: 13px 18px;
+  border: none;
+  border-radius: 14px;
+  background: #8b6bb1;
+  color: white;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.import-form button:hover,
+.import-result-card button:hover,
+.admin-back-link:hover {
+  background: #a17bcc;
+}
+
+.import-results {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.import-result-card {
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(238, 232, 246, 0.14);
+}
+
+.import-result-card h3 {
+  margin: 0 0 8px;
+  color: white;
+}
+
+.import-result-card p {
+  margin: 0 0 12px;
+  color: #d5c8e5;
+}
+
+.import-result-card small {
+  display: block;
+  color: #aa9abb;
+  margin-bottom: 14px;
+}
+
+.import-warning {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 193, 7, 0.14);
+  color: #ffe7a3 !important;
+  border: 1px solid rgba(255, 193, 7, 0.22);
+}
+
+@media (max-width: 800px) {
+  .import-form {
+    grid-template-columns: 1fr;
+  }
+
+  .import-results {
+    grid-template-columns: 1fr;
+  }
+
+  .import-card h1,
+  .admin-shell h1 {
+    font-size: 32px;
+  }
+}

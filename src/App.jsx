@@ -12,7 +12,6 @@ import ProfilePage from "./pages/ProfilePage";
 import AddSpotPage from "./pages/AddSpotPage";
 import ImportOsmPage from "./pages/ImportOsmPage";
 
-
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -165,18 +164,22 @@ return (
          isAdmin={isAdmin}
          />
 
-          <section className="hero-section">
+<section className="hero-section">
   <div className="hero-text">
-      <h1>{t.heroTitle}</h1>
-      <p>{t.heroSubtitle}</p>
-      <div className="hero-search">
-  <input
-    type="text"
-    placeholder="Search cafes, libraries, cities..."
-    value={searchText}
-    onChange={(e) => setSearchText(e.target.value)}
-  />
-</div>
+    <h1>Find the perfect place to focus.</h1>
+    <p>
+      Discover study-friendly cafes, libraries, and workspaces in Linz,
+      Vienna and Istanbul.
+    </p>
+
+    <div className="hero-search">
+      <input
+        type="text"
+        placeholder="Search cafes, libraries, cities..."
+        value={searchText}
+        onChange={(e) => setSearchText(e.target.value)}
+      />
+    </div>
   </div>
 </section>
 
@@ -312,6 +315,20 @@ return (
       places={filteredPlaces}
       onSelectPlace={setSelectedPlace}
     />
+  </div>
+</section>
+<section className="add-spot-section">
+  <div className="add-spot-content">
+    <div>
+      <h2>Know a great study place?</h2>
+      <p>
+        Help other students find quiet cafes, libraries, and study-friendly spots.
+      </p>
+    </div>
+
+    <Link to="/add-spot" className="add-spot-button">
+      Add a Spot
+    </Link>
   </div>
 </section>
 

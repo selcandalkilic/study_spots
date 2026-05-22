@@ -36,9 +36,6 @@ function Navbar({ session, language, setLanguage, isAdmin }) {
 </>
 
       <div className="navbar-links">
-        <Link to="/add-spot" className="navbar-add-link">
-          Add a Spot
-        </Link>
 
         <select
           className="navbar-select"

@@ -4,6 +4,30 @@ import { useState } from "react";
 
 function Navbar({ searchText, setSearchText, session, language, setLanguage, isAdmin }) {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      if (!session) {
+        setProfile(null);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("username, avatar_url")
+        .eq("id", session.user.id)
+        .single();
+
+      if (!error) {
+        setProfile(data);
+      }
+    }
+
+    fetchProfile();
+  }, [session]);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
@@ -53,30 +77,55 @@ function Navbar({ searchText, setSearchText, session, language, setLanguage, isA
           <option value="TR">TR</option>
         </select>
 
-        {session ? (
-          <>
-          {isAdmin && (
-          <Link to="/import-osm" className="navbar-admin-link">
-            Admin
-          </Link>
-        )}
-            <Link to="/profile" className="navbar-profile-link">
-              My Profile
-            </Link>
-            
+       {session ? (
+  <>
+    {isAdmin && (
+      <Link to="/import-osm" className="navbar-admin-link">
+        Admin
+      </Link>
+    )}
 
-            <button
-              className="navbar-link-button"
-              onClick={() => supabase.auth.signOut()}
-            >
-              Log out
-            </button>
+    <div className="navbar-user-menu">
+      <button
+        type="button"
+        className="navbar-avatar-button"
+        onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+      >
+        {profile?.avatar_url ? (
+          <img src={profile.avatar_url} alt={profile?.username || "Profile"} />
+        ) : (
+          <span>
+            {profile?.username
+              ? profile.username[0].toUpperCase()
+              : session.user.email[0].toUpperCase()}
+          </span>
+        )}
+      </button>
+
+              {profileMenuOpen && (
+                <div className="navbar-dropdown">
+                  <Link to="/profile" onClick={() => setProfileMenuOpen(false)}>
+                    My Profile
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProfileMenuOpen(false);
+                      supabase.auth.signOut();
+                    }}
+                  >
+                    Log out
+                  </button>
+                </div>
+              )}
+            </div>
           </>
         ) : (
           <Link to="/login" className="navbar-login-button">
             Log in
           </Link>
-        )}
+)}
       </div>
     </nav>
   );

@@ -3166,4 +3166,10 @@ body {
     min-width: 26px !important;
     max-width: 26px !important;
   }
+  .review-price-field p {
+  text-align: center;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
 }

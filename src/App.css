@@ -3172,4 +3172,9 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+.review-price-field label {
+  display: block;
+  text-align: center !important;
+  width: 100%;
+}
 }

@@ -1105,8 +1105,11 @@ section {
   }
 
   .rating-popover {
-    left: 0;
-    right: auto;
+    width: min(260px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    min-width: 0;
+    right: 0;
+    left: auto;
   }
 }
 

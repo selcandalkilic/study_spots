@@ -127,16 +127,20 @@ useEffect(() => {
 
   checkAdmin();
 }, [session]);
+
 function hasFeature(value) {
-  return (
-    value === true ||
-    value === "true" ||
-    value === "yes" ||
-    value === "some" ||
-    value === "many" ||
-    value === 1
-  );
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0 || value === null || value === undefined) {return false;}
+  if (typeof value === "string") { 
+    const normalized = value.toLowerCase().trim();
+    if (["true","yes","y","available","has","some","many","few","limited","plenty"].includes(normalized)) {return true;}
+    if (normalized.includes("/")) {
+      const firstNumber = Number(normalized.split("/")[0]); 
+      return firstNumber > 0;}
+  }
+  return false;
 }
+
 const filteredPlaces = places.filter((place) => {
   const searchMatches =
     place.name?.toLowerCase().includes(searchText.toLowerCase()) ||

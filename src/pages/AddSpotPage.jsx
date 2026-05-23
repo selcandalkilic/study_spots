@@ -60,11 +60,18 @@ function AddSpotPage({ session }) {
   "Late night",
   "All day",
 ];
+const cityOptions = ["Linz", "Vienna", "Istanbul"];
+
+const cityCountryMap = {
+  Linz: "Austria",
+  Vienna: "Austria",
+  Istanbul: "Turkey",
+};
 
   const [form, setForm] = useState({
     name: "",
-    city: "",
-    country: "",
+    city: "Linz",
+    country: "Austria",
     category: "Cafe",
     description: "",
     address: "",
@@ -110,42 +117,37 @@ function AddSpotPage({ session }) {
     }
   }
 
-  async function searchAddress() {
-    if (!form.address) {
-      alert("Please type an address first.");
-      return;
-    }
-
-    setSearchingAddress(true);
-
-    const query = encodeURIComponent(form.address);
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=5`
-    );
-
-    const data = await response.json();
-
-    setAddressResults(data);
-    setSearchingAddress(false);
-
-    if (data.length === 0) {
-      alert("No address found. Try writing the address more clearly.");
-    }
+async function searchAddress() {
+  if (!form.address) {
+    alert("Please type an address first.");
+    return;
   }
 
-  function confirmAddress(result) {
-    const latitude = Number(result.lat);
-    const longitude = Number(result.lon);
+  setSearchingAddress(true);
 
-    setSelectedAddress(result);
+  const fullSearchText = `${form.address}, ${form.city}, ${form.country}`;
+  const query = encodeURIComponent(fullSearchText);
 
-    setForm({
-      ...form,
-      address: result.display_name,
-      latitude,
-      longitude,
-    });
+  const countryCode =
+    form.country === "Austria"
+      ? "at"
+      : form.country === "Turkey"
+      ? "tr"
+      : "";
+
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=8&addressdetails=1&countrycodes=${countryCode}`
+  );
+
+  const data = await response.json();
+
+  setAddressResults(data);
+  setSearchingAddress(false);
+
+  if (data.length === 0) {
+    alert("No address found. Try street name, place name, or postcode.");
   }
+}
   async function uploadPlaceImage(event) {
   const file = event.target.files[0];
 
@@ -327,27 +329,40 @@ function AddSpotPage({ session }) {
           />
           
 
-          <div className="form-two-columns">
-            <div>
-              <label>City *</label>
-              <input
-                type="text"
-                placeholder="Linz"
-                value={form.city}
-                onChange={(e) => updateField("city", e.target.value)}
-              />
-            </div>
+<div className="form-two-columns">
+  <div>
+    <label>City *</label>
+    <select
+      value={form.city}
+      onChange={(e) => {
+        const selectedCity = e.target.value;
 
-            <div>
-              <label>Country *</label>
-              <input
-                type="text"
-                placeholder="Austria"
-                value={form.country}
-                onChange={(e) => updateField("country", e.target.value)}
-              />
-            </div>
-          </div>
+        setForm((prev) => ({
+          ...prev,
+          city: selectedCity,
+          country: cityCountryMap[selectedCity],
+          address: "",
+          latitude: "",
+          longitude: "",
+        }));
+
+        setAddressResults([]);
+        setSelectedAddress(null);
+      }}
+    >
+      {cityOptions.map((city) => (
+        <option key={city} value={city}>
+          {city}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  <div>
+    <label>Country *</label>
+    <input type="text" value={form.country} readOnly />
+  </div>
+</div>
 
           <label>Category</label>
           <select

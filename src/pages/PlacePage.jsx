@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import PlaceDetails from "../components/PlaceDetails";
 
 function PlacePage({ session }) {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [place, setPlace] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ function PlacePage({ session }) {
       const { data, error } = await supabase
         .from("places")
         .select("*")
-        .eq("id", id)
+        .eq("slug", slug)
         .single();
 
       if (error) {

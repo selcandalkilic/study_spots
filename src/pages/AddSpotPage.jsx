@@ -182,6 +182,22 @@ async function searchAddress() {
   setUploadingImage(false);
 }
 
+function createSlug(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .replace(/ı/g, "i")
+    .replace(/ğ/g, "g")
+    .replace(/ş/g, "s")
+    .replace(/ç/g, "c")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
   async function submitSpot(event) {
     event.preventDefault();
 
@@ -214,6 +230,7 @@ async function searchAddress() {
       .insert([
         {
           name: form.name,
+          slug: createSlug(form.name),
           city: form.city,
           country: form.country,
           category: form.category,

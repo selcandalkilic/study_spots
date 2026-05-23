@@ -224,7 +224,7 @@ return (
     <div className="top-places-list">
       {filteredPlaces.slice(0, 4).map((place) => (
         <Link
-          to={`/places/${place.id}`}
+          to={`/places/${place.slug || place.id}`}
           className="top-place-card"
           key={place.id}
         >
@@ -286,7 +286,7 @@ return (
       />
 
       <Route path="/login" element={<LoginPage session={session} />} />
-      <Route path="/places/:id" element={<PlacePage session={session} />} />
+      <Route path="/places/:slug" element={<PlacePage session={session} />} />
       <Route path="/profile" element={<ProfilePage session={session} />} />
       <Route path="/add-spot" element={<AddSpotPage session={session} />} />
       <Route path="/import-osm" element={<ImportOsmPage session={session} />} />

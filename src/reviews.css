@@ -183,4 +183,78 @@
   .place-detail-new .price-choice {
     width: 46px;
   }
+}/* Normal rating rows */
+.rating-section .star-rating-field {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0;
+}
+
+.rating-section .star-rating-field label,
+.price-rating-field label,
+.checkbox-grid label,
+.rating-section > label {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2f2840;
+  text-align: center;
+}
+
+/* Normal stars */
+.rating-section .star-rating {
+  display: flex;
+  justify-content: center;
+  gap: 38px;
+}
+
+.rating-section .star-button {
+  font-size: 26px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  color: #9b89ad;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.rating-section .star-button.active {
+  color: #765d91;
+}
+
+/* Make only the first / overall rating bigger */
+.rating-section .star-rating-field:first-of-type label {
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.rating-section .star-rating-field:first-of-type .star-button {
+  font-size: 38px;
+}
+
+.rating-section .star-rating-field:first-of-type .star-rating {
+  gap: 48px;
+  margin-top: 8px;
+}
+.rating-section {
+  max-width: 880px;
+  margin: 48px auto 0;
+  padding: 34px;
+  border: 1px solid #e7deee;
+  border-radius: 28px;
+  background: #fff;
+}
+
+.rating-section h2 {
+  font-size: 26px;
+  font-weight: 900;
+  text-align: center;
+  color: #261f35;
+  margin-bottom: 10px;
+}
+
+.rating-section p {
+  text-align: center;
+  color: #756b83;
 }

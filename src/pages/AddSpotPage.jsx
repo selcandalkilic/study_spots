@@ -51,15 +51,6 @@ function AddSpotPage({ session }) {
     "23:00", "23:30",
     "00:00",
   ];
-  const bestTimeOptions = [
-  "Early morning",
-  "Morning",
-  "Noon",
-  "Afternoon",
-  "Evening",
-  "Late night",
-  "All day",
-];
 const cityOptions = ["Linz", "Vienna", "Istanbul"];
 
 const cityCountryMap = {
@@ -88,11 +79,8 @@ const cityCountryMap = {
     seating_rating: 5,
     crowdedness_rating: 3,
     price_rating: 5,
-    wifi: true,
-    laptop_friendly: true,
-    solo_study: true,
-    group_study: false,
-    best_time_to_study: "Morning",
+    laptop_friendly : true,
+    seating_type: "Indoor",
     comment: "",
   });
 
@@ -124,6 +112,8 @@ async function searchAddress() {
   }
 
   setSearchingAddress(true);
+  setAddressResults([]);
+  setSelectedAddress(null);
 
   const fullSearchText = `${form.address}, ${form.city}, ${form.country}`;
   const query = encodeURIComponent(fullSearchText);
@@ -135,18 +125,32 @@ async function searchAddress() {
       ? "tr"
       : "";
 
-  const response = await fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=8&addressdetails=1&countrycodes=${countryCode}`
-  );
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${query}&limit=8&addressdetails=1&countrycodes=${countryCode}`
+    );
 
-  const data = await response.json();
+    const data = await response.json();
 
-  setAddressResults(data);
-  setSearchingAddress(false);
+    const filteredData = data.filter((result) => {
+      const displayName = result.display_name.toLowerCase();
+      const city = form.city.toLowerCase();
+      const country = form.country.toLowerCase();
 
-  if (data.length === 0) {
-    alert("No address found. Try street name, place name, or postcode.");
+      return displayName.includes(city) || displayName.includes(country);
+    });
+
+    setAddressResults(filteredData.length > 0 ? filteredData : data);
+
+    if (data.length === 0) {
+      alert("No address found. Try a place name, street name, or postcode.");
+    }
+  } catch (error) {
+    console.log("Address search error:", error);
+    alert("Address search failed. Please try again.");
   }
+
+  setSearchingAddress(false);
 }
   async function uploadPlaceImage(event) {
   const file = event.target.files[0];
@@ -218,7 +222,6 @@ async function searchAddress() {
           latitude: Number(form.latitude),
           longitude: Number(form.longitude),
           image_url: form.image_url,
-          wifi: form.wifi,
           quiet: form.noise_rating >= 4,
           opening_hours: openingHours,
           opening_days: form.opening_days,
@@ -228,9 +231,7 @@ async function searchAddress() {
           noise_level: `${form.noise_rating}/5`,
           seating: `${form.seating_rating}/5`,
           laptop_friendly: form.laptop_friendly,
-          solo_study: form.solo_study,
-          group_study: form.group_study,
-          best_time_to_study: form.best_time_to_study,
+          seating_type: form.seating_type,
           crowded_times: `${form.crowdedness_rating}/5 crowdedness`,
           price_rating: Number(form.price_rating),
           created_by: session.user.id,
@@ -256,6 +257,8 @@ async function searchAddress() {
         outlets_rating: Number(form.outlets_rating),
         noise_rating: Number(form.noise_rating),
         seating_rating: Number(form.seating_rating),
+        laptop_friendly: form.laptop_friendly,
+        seating_type: form.seating_type,
         crowdedness_rating: Number(form.crowdedness_rating),
         price_rating: Number(form.price_rating),
         comment:
@@ -386,7 +389,7 @@ async function searchAddress() {
           <div className="address-search-row">
             <input
               type="text"
-              placeholder="Example: Karlsplatz 13, Vienna"
+              placeholder="Example: Cafe Gerberei, Wienerstraße 40, or 4020"
               value={form.address}
               onChange={(e) => updateField("address", e.target.value)}
             />
@@ -528,12 +531,49 @@ async function searchAddress() {
                 value={form.seating_rating}
                 onChange={(value) => updateField("seating_rating", value)}
                 />
+                <div className="choice-section">
+                    <label>Seating type</label>
+
+                    <div className="choice-button-row">
+                      {["Indoor", "Outdoor", "Both"].map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          className={form.seating_type === type ? "choice-button active" : "choice-button"}
+                          onClick={() => updateField("seating_type", type)}
+                        >
+                          {type}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                 <StarRating
                 label="Crowdedness"
                 value={form.crowdedness_rating}
                 onChange={(value) => updateField("crowdedness_rating", value)}
                 />
+                <div className="choice-section">
+  <label>Laptop friendly</label>
+
+  <div className="choice-button-row">
+      <button
+        type="button"
+        className={form.laptop_friendly ? "choice-button active" : "choice-button"}
+        onClick={() => updateField("laptop_friendly", true)}
+      >
+        Yes
+      </button>
+
+      <button
+        type="button"
+        className={!form.laptop_friendly ? "choice-button active" : "choice-button"}
+        onClick={() => updateField("laptop_friendly", false)}
+      >
+        No
+      </button>
+    </div>
+  </div>
                 <div className="price-rating-field">
                 <label>Price level</label>
 
@@ -563,56 +603,6 @@ async function searchAddress() {
               onChange={(e) => updateField("comment", e.target.value)}
             />
           </div>
-
-          <div className="checkbox-grid">
-            <label>
-              <input
-                type="checkbox"
-                checked={form.wifi}
-                onChange={(e) => updateField("wifi", e.target.checked)}
-              />
-              WiFi available
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={form.laptop_friendly}
-                onChange={(e) =>
-                  updateField("laptop_friendly", e.target.checked)
-                }
-              />
-              Laptop friendly
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={form.solo_study}
-                onChange={(e) => updateField("solo_study", e.target.checked)}
-              />
-              Solo study
-            </label>
-
-            <label>
-              <input
-                type="checkbox"
-                checked={form.group_study}
-                onChange={(e) => updateField("group_study", e.target.checked)}
-              />
-              Group study
-            </label>
-          </div>
-
-          <label>Best time to study</label>
-            <select
-            value={form.best_time_to_study}
-            onChange={(e) => updateField("best_time_to_study", e.target.value)}
-            >
-            {bestTimeOptions.map((time) => (
-                <option key={time}>{time}</option>
-            ))}
-            </select>
 
           <button type="submit" disabled={saving}>
             {saving ? "Saving..." : "Add Study Spot"}

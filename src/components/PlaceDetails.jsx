@@ -1,19 +1,80 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 import ReviewForm from "./ReviewForm";
+import "../place-details.css";
+import { Link } from "react-router-dom";
+import "../reviews.css";
 
 function PlaceDetails({ place, onClose, session }) {
-  const [reviews, setReviews] = useState([]);
-  const [editingReviewId, setEditingReviewId] = useState(null);
+const [reviews, setReviews] = useState([]);
+const [editingReviewId, setEditingReviewId] = useState(null);
 const [editRating, setEditRating] = useState(5);
 const [editComment, setEditComment] = useState("");
 const [editIsAnonymous, setEditIsAnonymous] = useState(false);
+const averageStudyRating = getAverage("rating");
+const averageWifiRating = getAverage("wifi_rating");
+const averageOutletsRating = getAverage("outlets_rating");
+const averageNoiseRating = getAverage("noise_rating");
+const averageSeatingRating = getAverage("seating_rating");
+const averageCrowdednessRating = getAverage("crowdedness_rating");
+const averagePriceRating = getAverage("price_rating");
+const [editWifiRating, setEditWifiRating] = useState(null);
+const [editOutletsRating, setEditOutletsRating] = useState(null);
+const [editNoiseRating, setEditNoiseRating] = useState(null);
+const [editSeatingRating, setEditSeatingRating] = useState(null);
+const [editCrowdednessRating, setEditCrowdednessRating] = useState(null);
+const [editPriceRating, setEditPriceRating] = useState(null);
+const [editLaptopFriendly, setEditLaptopFriendly] = useState(null);
+const [editSeatingType, setEditSeatingType] = useState("");
+
+function getYesPercentage(fieldName) {
+  const values = reviews
+    .map((review) => review[fieldName])
+    .filter((value) => value !== null && value !== undefined);
+
+  if (values.length === 0) return null;
+
+  const yesCount = values.filter(Boolean).length;
+  return Math.round((yesCount / values.length) * 100);
+}
+
+function getMostCommon(fieldName) {
+  const values = reviews
+    .map((review) => review[fieldName])
+    .filter(Boolean);
+
+  if (values.length === 0) return null;
+
+  const counts = {};
+
+  values.forEach((value) => {
+    counts[value] = (counts[value] || 0) + 1;
+  });
+
+  return Object.keys(counts).reduce((a, b) =>
+    counts[a] > counts[b] ? a : b
+  );
+}
+
+const laptopFriendlyPercentage = getYesPercentage("laptop_friendly");
+const groupStudyPercentage = getYesPercentage("group_study_friendly");
+const mostCommonBestTime = getMostCommon("best_time_to_study");
 
 function startEditingReview(review) {
   setEditingReviewId(review.id);
   setEditRating(review.rating);
   setEditComment(review.comment || "");
-  setEditIsAnonymous(review.is_anonymous || false);
+  setEditIsAnonymous(review.is_anonymous);
+
+  setEditWifiRating(review.wifi_rating);
+  setEditOutletsRating(review.outlets_rating);
+  setEditNoiseRating(review.noise_rating);
+  setEditSeatingRating(review.seating_rating);
+  setEditCrowdednessRating(review.crowdedness_rating);
+  setEditPriceRating(review.price_rating);
+  setEditLaptopFriendly(review.laptop_friendly);
+  setEditSeatingType(review.seating_type || "");
+
 }
 
 async function updateReview(reviewId) {
@@ -23,6 +84,14 @@ async function updateReview(reviewId) {
       rating: Number(editRating),
       comment: editComment,
       is_anonymous: editIsAnonymous,
+      wifi_rating: editWifiRating || null,
+    outlets_rating: editOutletsRating || null,
+    noise_rating: editNoiseRating || null,
+    seating_rating: editSeatingRating || null,
+    crowdedness_rating: editCrowdednessRating || null,
+    price_rating: editPriceRating || null,
+    laptop_friendly: editLaptopFriendly,
+    seating_type: editSeatingType || null,
     })
     .eq("id", reviewId);
 
@@ -104,113 +173,285 @@ useEffect(() => {
   }
 }, [place?.id]);
 
+function getAverage(fieldName) {
+  const values = reviews
+    .map((review) => review[fieldName])
+    .filter((value) => value !== null && value !== undefined && value !== "");
+
+  if (values.length === 0) return null;
+
+  const sum = values.reduce((total, value) => total + Number(value), 0);
+  return (sum / values.length).toFixed(1);
+}
+
+function formatRating(value) {
+  if (!value) return "Not rated yet";
+  return `${value}/5`;
+}
+function formatPriceLevel(value) {
+  if (!value) return "Not rated yet";
+
+  const number = Number(value);
+
+  if (number <= 3) return "€ Cheap";
+  if (number <= 6) return "€€ Moderate";
+  if (number <= 8) return "€€€ Pricey";
+  return "€€€€ Expensive";
+}
+function formatRatingLabel(value) {
+  if (!value) return "Not rated yet";
+
+  const number = Number(value);
+
+  if (number < 2) return `Bad · ${number.toFixed(1)}/5`;
+  if (number < 3) return `Okay · ${number.toFixed(1)}/5`;
+  if (number < 4) return `Good · ${number.toFixed(1)}/5`;
+  if (number < 4.5) return `Very good · ${number.toFixed(1)}/5`;
+  return `Amazing · ${number.toFixed(1)}/5`;
+}
+
+function scrollToReviewForm() {
+  const reviewSection = document.getElementById("review-form-section");
+  if (reviewSection) {
+    reviewSection.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+
+
+function sharePlace() {
+  const url = window.location.href;
+
+  if (navigator.share) {
+    navigator.share({
+      title: place.name,
+      text: `Check out ${place.name} on Study Spots`,
+      url: url,
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert("Link copied!");
+  }
+}
+function getYesPercentage(fieldName) {
+  const values = reviews
+    .map((review) => review[fieldName])
+    .filter((value) => value !== null && value !== undefined);
+
+  if (values.length === 0) return null;
+
+  const yesCount = values.filter(Boolean).length;
+  return Math.round((yesCount / values.length) * 100);
+}
+
+function getMostCommon(fieldName) {
+  const values = reviews
+    .map((review) => review[fieldName])
+    .filter(Boolean);
+
+  if (values.length === 0) return null;
+
+  const counts = {};
+
+  values.forEach((value) => {
+    counts[value] = (counts[value] || 0) + 1;
+  });
+
+  return Object.keys(counts).reduce((a, b) =>
+    counts[a] > counts[b] ? a : b
+  );
+}
+
+function getRatingCount(star) {
+  return reviews.filter((review) => Number(review.rating) === star).length;
+}
+
+const ratingCounts = {
+  5: getRatingCount(5),
+  4: getRatingCount(4),
+  3: getRatingCount(3),
+  2: getRatingCount(2),
+  1: getRatingCount(1),
+};
+
+const maxRatingCount = Math.max(...Object.values(ratingCounts), 1);
+
   return (
-    <div className="place-details">
-      <button onClick={() => window.history.back()}>← Back to places</button>
+   <div className="place-detail-new">
+     <a href="/" className="place-back-link">
+      ← Back to places
+    </a>
 
-      {place.image_url ? (
-        <img
-          className="place-hero-image"
-          src={place.image_url}
-          alt={place.name}
-        />
-      ) : (
-        <div className="place-image-placeholder">No image added yet</div>
-      )}
+  <div className="place-gallery">
+    {place.image_url ? (
+      <img className="place-main-image" src={place.image_url} alt={place.name} />
+    ) : (
+      <div className="place-main-image-placeholder">No image yet</div>
+    )}
+  </div>
 
-      <div className="place-detail-header">
-        <div>
-          <h2>{place.name}</h2>
-          <p className="place-detail-location">
-            {place.category} · {place.city}, {place.country}
-          </p>
+  <div className="place-title-row">
+    <div>
+      <h1>{place.name}</h1>
+      <p>
+        {place.category} · {place.city}, {place.country}
+      </p>
+    </div>
+
+    <div className="place-big-rating">
+      <strong>{averageStudyRating || "—"}</strong>
+      <span>
+        ⭐ {averageStudyRating ? `${averageStudyRating}/5` : "No reviews"}
+      </span>
+    </div>
+  </div>
+
+  <div className="place-action-row">
+    <button type="button" className="place-action-button">
+      ♡ Save
+    </button>
+
+    <button
+      type="button"
+      className="place-action-button"
+      onClick={scrollToReviewForm}
+    >
+      ✎ Review
+    </button>
+
+    <button
+      type="button"
+      className="place-action-button"
+      onClick={sharePlace}
+    >
+      ⤴ Share
+    </button>
+  </div>
+
+  <p className="place-detail-description">
+    {place.description || "No description added yet."}
+  </p>
+  
+      <div className="place-main-info-grid">
+  <div className="place-info-card">
+    <span>💻</span>
+    <strong>WiFi</strong>
+    <p>{formatRatingLabel(averageWifiRating)}</p>
+  </div>
+
+  <div className="place-info-card">
+    <span>🔌</span>
+    <strong>Power outlets</strong>
+    <p>{formatRatingLabel(averageOutletsRating)}</p>
+  </div>
+
+  <div className="place-info-card">
+    <span>🤫</span>
+    <strong>Quietness</strong>
+    <p>{formatRatingLabel(averageNoiseRating)}</p>
+  </div>
+
+  <div className="place-info-card">
+    <span>🪑</span>
+    <strong>Seating</strong>
+    <p>{formatRatingLabel(averageSeatingRating)}</p>
+  </div>
+
+    <div className="place-info-card">
+  <span>💻</span>
+  <strong>Laptop</strong>
+  <p>
+    {laptopFriendlyPercentage !== null
+      ? `${laptopFriendlyPercentage}% say yes`
+      : "Not rated yet"}
+  </p>
+</div>
+
+  <div className="place-info-card">
+    <span>💸</span>
+    <strong>Price</strong>
+    <p>{formatPriceLevel(averagePriceRating)}</p>
+  </div>
+</div>
+<section className="place-ratings-section">
+  <div className="ratings-overall-card">
+  <h3>Overall</h3>
+
+  <div className="ratings-big-number">
+    {averageStudyRating || "—"}
+  </div>
+
+  <p>
+    ⭐ {averageStudyRating ? `${averageStudyRating}/5` : "No reviews yet"}
+  </p>
+
+  <small>{reviews.length} reviews</small>
+
+  <div className="rating-distribution">
+    {[5, 4, 3, 2, 1].map((star) => (
+      <div className="rating-distribution-row" key={star}>
+        <span>{star}★</span>
+
+        <div className="rating-distribution-bar">
+          <div
+            className="rating-distribution-fill"
+            style={{
+              width: `${(ratingCounts[star] / maxRatingCount) * 100}%`,
+            }}
+          ></div>
         </div>
 
-        <div className="place-detail-rating">
-          ⭐ {place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}
-        </div>
+        <strong>{ratingCounts[star]}</strong>
       </div>
+    ))}
+  </div>
+</div>
 
-      <p className="place-detail-description">{place.description}</p>
+  <div className="ratings-breakdown-card">
+    <h3>Ratings</h3>
 
-      <div className="details-grid">
-        <div>
-          <strong>WiFi</strong>
-          <p>{place.wifi ? "Yes" : "No"}</p>
-        </div>
+    <div className="rating-row">
+      <span>WiFi quality</span>
+      <strong>{formatRating(averageWifiRating)}</strong>
+    </div>
 
-        <div>
-          <strong>Quiet</strong>
-          <p>{place.quiet ? "Yes" : "No"}</p>
-        </div>
+    <div className="rating-row">
+      <span>Power outlets</span>
+      <strong>{formatRating(averageOutletsRating)}</strong>
+    </div>
 
-        <div>
-          <strong>Opening hours</strong>
-          <p>{place.opening_hours}</p>
-        </div>
+    <div className="rating-row">
+      <span>Quietness</span>
+      <strong>{formatRating(averageNoiseRating)}</strong>
+    </div>
 
-        <div>
-          <strong>Category</strong>
-          <p>{place.category}</p>
-        </div>
+    <div className="rating-row">
+      <span>Seating</span>
+      <strong>{formatRating(averageSeatingRating)}</strong>
+    </div>
 
-        <div>
-          <strong>Study rating</strong>
-          <p>{place.study_rating ? `${place.study_rating}/5` : "Not rated yet"}</p>
-        </div>
+    <div className="rating-row">
+      <span>Crowdedness</span>
+      <strong>{formatRating(averageCrowdednessRating)}</strong>
+    </div>
 
-        <div>
-          <strong>WiFi quality</strong>
-          <p>{place.wifi_quality}</p>
-        </div>
-
-        <div>
-          <strong>Power outlets</strong>
-          <p>{place.outlets}</p>
-        </div>
-
-        <div>
-          <strong>Noise level</strong>
-          <p>{place.noise_level}</p>
-        </div>
-
-        <div>
-          <strong>Seating</strong>
-          <p>{place.seating}</p>
-        </div>
-
-        <div>
-          <strong>Laptop friendly</strong>
-          <p>{place.laptop_friendly ? "Yes" : "No"}</p>
-        </div>
-
-        <div>
-          <strong>Solo study</strong>
-          <p>{place.solo_study ? "Yes" : "No"}</p>
-        </div>
-
-        <div>
-          <strong>Group study</strong>
-          <p>{place.group_study ? "Yes" : "No"}</p>
-        </div>
-
-        <div>
-          <strong>Best time to study</strong>
-          <p>{place.best_time_to_study}</p>
-        </div>
-
-        <div>
-          <strong>Crowded times</strong>
-          <p>{place.crowded_times}</p>
-        </div>
-      </div>
+    <div className="rating-row">
+      <span>Price level</span>
+      <strong>
+        {averagePriceRating ? `${averagePriceRating}/10` : "Not rated yet"}
+      </strong>
+    </div>
+  </div>
+</section>
 
       <div className="reviews-section">
-        <ReviewForm
-          placeId={place.id}
-          session={session}
-          onReviewAdded={fetchReviews}
-        />
+        <div id="review-form-section">
+          <ReviewForm
+            placeId={place.id}
+            session={session}
+            onReviewAdded={fetchReviews}
+          />
+        </div>
 
         <h3>Reviews</h3>
 
@@ -280,7 +521,8 @@ useEffect(() => {
         )}
       </div>
     </div>
-  );
+
+);
 }
 
 export default PlaceDetails;

@@ -988,7 +988,9 @@ section {
   box-shadow: 0 6px 16px rgba(64, 42, 88, 0.06);
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  height: 54px;
 }
 
 .filter-chip:hover {
@@ -3522,7 +3524,7 @@ body {
 .filter-chip-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   position: relative;
   flex-wrap: nowrap;
 }
@@ -3530,7 +3532,7 @@ body {
 .chip-scroll {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   overflow-x: auto;
   padding: 2px 2px 8px;
   scrollbar-width: none;
@@ -3541,6 +3543,9 @@ body {
   position: relative;
   flex: 0 0 auto;
   z-index: 50;
+  display: flex;
+  align-items: center;
+  transform: translateY(-2px);
 }
 
 .rating-popover {

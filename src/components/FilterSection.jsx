@@ -13,12 +13,12 @@ function FilterSection({
   const [ratingOpen, setRatingOpen] = useState(false);
 
   const features = [
-    { label: "Quiet", icon: "🤫" },
-    { label: "Wi-Fi", icon: "⌁" },
-    { label: "Outlets", icon: "🔌" },
-    { label: "Laptop Friendly", icon: "💻" },
-    { label: "Long Study Friendly", icon: "⏱" },
-  ];
+  { label: "Quiet", icon: "🤫" },
+  { label: "Wi-Fi", icon: "⌁" },
+  { label: "Outlets", icon: "🔌" },
+  { label: "Laptop Friendly", icon: "💻" },
+  { label: "Long Study Friendly", icon: "⏱" },
+];
 
   const cities = ["All", "Linz", "Istanbul", "Vienna"];
 
@@ -61,34 +61,34 @@ function FilterSection({
         <div className="filter-chip-row">
   <div className="chip-scroll">
     {features.map((feature) => (
-      <button
-        key={feature.label}
-        className={
-          selectedFeatures.includes(feature.label)
-            ? "filter-chip active"
-            : "filter-chip"
-        }
-        onClick={() => toggleFeature(feature.label)}
-      >
-        <span className="chip-icon">{feature.icon}</span>
-        {feature.label}
-      </button>
-    ))}
-  </div>
+  <button
+    key={feature.label}
+    className={
+      selectedFeatures.includes(feature.label)
+        ? "filter-chip active"
+        : "filter-chip"
+    }
+    onClick={() => toggleFeature(feature.label)}
+  >
+    <span className="chip-icon">{feature.icon}</span>
+    {feature.label}
+  </button>
+))}
+      </div>
 
   <div className="rating-filter-wrapper">
     <button
       className={selectedRating ? "filter-chip active" : "filter-chip"}
       onClick={() => setRatingOpen(!ratingOpen)}
     >
-      {selectedRating ? `${selectedRating}+ ★` : "Rating ★"}
+      {selectedRating ? `${selectedRating} ★` : "Rating ★"}
     </button>
 
     {ratingOpen && (
       <div className="rating-popover">
         <p>Minimum rating</p>
 
-        {[5, 4, 3, 2, 1].map((rating) => (
+{[1, 2, 3, 4, 5].map((rating) => (
   <button
     type="button"
     key={rating}
@@ -100,12 +100,11 @@ function FilterSection({
     onClick={(e) => {
       e.preventDefault();
       e.stopPropagation();
-      console.log("Clicked rating:", rating);
       setSelectedRating(rating);
       setRatingOpen(false);
     }}
   >
-    {rating}+ ★
+    {rating} ★
   </button>
 ))}
 

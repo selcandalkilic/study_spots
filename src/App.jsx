@@ -127,7 +127,16 @@ useEffect(() => {
 
   checkAdmin();
 }, [session]);
-
+function hasFeature(value) {
+  return (
+    value === true ||
+    value === "true" ||
+    value === "yes" ||
+    value === "some" ||
+    value === "many" ||
+    value === 1
+  );
+}
 const filteredPlaces = places.filter((place) => {
   const searchMatches =
     place.name?.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -139,18 +148,22 @@ const filteredPlaces = places.filter((place) => {
 
   const placeRating = Number(place.study_rating || 0);
 
-const ratingMatches = 
-!selectedRating || placeRating >= selectedRating;
+let ratingMatches = true;
+if (selectedRating === 1) {ratingMatches = placeRating >= 1 && placeRating < 2;} 
+else if (selectedRating === 2) {ratingMatches = placeRating >= 2 && placeRating < 3;} 
+else if (selectedRating === 3) {ratingMatches = placeRating >= 3 && placeRating < 4;} 
+else if (selectedRating === 4) {ratingMatches = placeRating >= 4 && placeRating < 4.8;} 
+else if (selectedRating === 5) {ratingMatches = placeRating >= 4.8;}
 
-  const featureMatches = selectedFeatures.every((feature) => {
-    if (feature === "Wi-Fi") return place.wifi === true;
-    if (feature === "Outlets") return place.outlets === true;
-    if (feature === "Quiet") return place.quiet === true;
-    if (feature === "Laptop Friendly") return place.laptop_friendly === true;
-    if (feature === "Long Study Friendly") return place.long_study_friendly === true;
+const featureMatches = selectedFeatures.every((feature) => {
+  if (feature === "Wi-Fi") return hasFeature(place.wifi);
+  if (feature === "Outlets") return hasFeature(place.outlets);
+  if (feature === "Quiet") return hasFeature(place.quiet);
+  if (feature === "Laptop Friendly") return hasFeature(place.laptop_friendly);
+  if (feature === "Long Study Friendly") return hasFeature(place.long_study_friendly);
 
-    return true;
-  });
+  return true;
+});
 
   return searchMatches && cityMatches && ratingMatches && featureMatches;
 });
@@ -180,15 +193,6 @@ return (
       Discover study-friendly cafes, libraries, and workspaces in Linz,
       Vienna and Istanbul.
     </p>
-
-    <div className="hero-search">
-      <input
-        type="text"
-        placeholder="Search cafes, libraries, cities..."
-        value={searchText}
-        onChange={(e) => setSearchText(e.target.value)}
-      />
-    </div>
   </div>
 </section>
 

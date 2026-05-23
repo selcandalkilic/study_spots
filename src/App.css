@@ -3635,13 +3635,8 @@ body {
   }
 
   .city-select {
-    width: 96px;
-    min-width: 96px;
     height: 48px;
-    padding: 0 28px 0 12px;
     font-size: 15px;
-    appearance: auto;
-  -webkit-appearance: auto;
   }
 
   .mobile-main-filters {
@@ -3684,5 +3679,29 @@ body {
     width: min(260px, calc(100vw - 32px));
     max-width: calc(100vw - 32px);
     min-width: 0;
+  }
+  .city-select-wrapper {
+    position: relative;
+    width: 96px;
+    min-width: 96px;
+  }
+  .city-select-wrapper::after {
+    content: "⌄";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-52%);
+    pointer-events: none;
+    color: #4d425c;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .city-select {
+    width: 100%;
+    min-width: 0;
+    padding: 0 32px 0 12px;
+    appearance: none;
+    -webkit-appearance: none;
   }
 }

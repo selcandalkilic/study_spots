@@ -48,17 +48,19 @@ function FilterSection({
             />
           </div>
 
-          <select
+          <div className="city-select-wrapper">
+            <select
             className="city-select"
             value={selectedCity}
             onChange={(e) => setSelectedCity(e.target.value)}
-          >
-            {cities.map((city) => (
-              <option key={city} value={city}>
-                {city}
-              </option>
-            ))}
-          </select>
+            >
+              {cities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="filter-chip-row desktop-filter-row">

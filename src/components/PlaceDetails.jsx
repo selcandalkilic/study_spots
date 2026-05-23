@@ -4,6 +4,7 @@ import ReviewForm from "./ReviewForm";
 import "../place-details.css";
 import { Link } from "react-router-dom";
 import "../reviews.css";
+import StudyMap from "./StudyMap";
 
 function PlaceDetails({ place, onClose, session }) {
 const [reviews, setReviews] = useState([]);
@@ -26,6 +27,8 @@ const [editCrowdednessRating, setEditCrowdednessRating] = useState(null);
 const [editPriceRating, setEditPriceRating] = useState(null);
 const [editLaptopFriendly, setEditLaptopFriendly] = useState(null);
 const [editSeatingType, setEditSeatingType] = useState("");
+
+
 
 function getYesPercentage(fieldName) {
   const values = reviews
@@ -276,6 +279,28 @@ const ratingCounts = {
 
 const maxRatingCount = Math.max(...Object.values(ratingCounts), 1);
 
+const hasLocation = place?.latitude && place?.longitude;
+
+const mapPlace = hasLocation
+  ? [
+      {
+        id: place.id,
+        name: place.name,
+        city: place.city,
+        country: place.country,
+        category: place.category,
+        latitude: Number(place.latitude),
+        longitude: Number(place.longitude),
+      },
+    ]
+  : [];
+
+const routeUrl = hasLocation
+  ? `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`
+  : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      `${place.name}, ${place.address || ""}, ${place.city || ""}`
+    )}`;
+
   return (
    <div className="place-detail-new">
      <a href="/" className="place-back-link">
@@ -296,6 +321,11 @@ const maxRatingCount = Math.max(...Object.values(ratingCounts), 1);
       <p>
         {place.category} · {place.city}, {place.country}
       </p>
+      {place.address && (
+        <p className="place-address-text">
+          📍 {place.address}
+        </p>
+      )}
     </div>
 
     <div className="place-big-rating">
@@ -405,7 +435,7 @@ const maxRatingCount = Math.max(...Object.values(ratingCounts), 1);
       </div>
     ))}
   </div>
-</div>
+  </div>
 
   <div className="ratings-breakdown-card">
     <h3>Ratings</h3>
@@ -441,7 +471,36 @@ const maxRatingCount = Math.max(...Object.values(ratingCounts), 1);
         {averagePriceRating ? `${averagePriceRating}/10` : "Not rated yet"}
       </strong>
     </div>
+
+</div>
+<div className="place-location-section">
+  <div className="place-location-header">
+    <div>
+      <h2>Location</h2>
+      <p>{place.address || `${place.city}, ${place.country}`}</p>
+    </div>
+
+    <a
+      className="route-button"
+      href={routeUrl}
+      target="_blank"
+      rel="noreferrer"
+    >
+      Show route
+    </a>
   </div>
+
+  {hasLocation ? (
+    <div className="place-detail-map">
+      <StudyMap places={mapPlace} />
+    </div>
+  ) : (
+    <p className="no-location-text">
+      No exact map location available yet.
+    </p>
+  )}
+</div>
+
 </section>
 
       <div className="reviews-section">

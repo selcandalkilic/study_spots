@@ -78,7 +78,7 @@ const cityCountryMap = {
     noise_rating: 5,
     seating_rating: 5,
     crowdedness_rating: 3,
-    price_rating: 5,
+    price_rating: null,
     laptop_friendly : true,
     seating_type: "Indoor",
     comment: "",
@@ -233,7 +233,8 @@ async function searchAddress() {
           laptop_friendly: form.laptop_friendly,
           seating_type: form.seating_type,
           crowded_times: `${form.crowdedness_rating}/5 crowdedness`,
-          price_rating: Number(form.price_rating),
+          price_rating:
+            form.price_rating !== null ? Number(form.price_rating) : null,
           created_by: session.user.id,
           status: "approved",
         },
@@ -260,7 +261,8 @@ async function searchAddress() {
         laptop_friendly: form.laptop_friendly,
         seating_type: form.seating_type,
         crowdedness_rating: Number(form.crowdedness_rating),
-        price_rating: Number(form.price_rating),
+        price_rating:
+           form.price_rating !== null ? Number(form.price_rating) : null,
         comment:
             form.comment ||
             "Initial review from the person who added this study spot.",
@@ -583,7 +585,7 @@ async function searchAddress() {
                         key={number}
                         type="button"
                         className={
-                        number <= form.price_rating
+                          form.price_rating !== null && number <= form.price_rating
                             ? "price-button active"
                             : "price-button"
                         }

@@ -144,7 +144,8 @@ const filteredPlaces = places.filter((place) => {
     place.category?.toLowerCase().includes(searchText.toLowerCase());
 
   const cityMatches =
-    selectedCity === "All" || place.city === selectedCity;
+  selectedCity === "All" ||
+  place.city?.toLowerCase() === selectedCity.toLowerCase();
 
   const placeRating = Number(place.study_rating || 0);
 

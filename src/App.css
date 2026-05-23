@@ -2598,6 +2598,10 @@ body {
   .navbar {
     height: auto;
     padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+    overflow: visible;
   }
 
   .navbar-inner {
@@ -3329,7 +3333,14 @@ body {
   }
 
   .navbar-dropdown {
+     top: 58px;
     right: 0;
+    z-index: 10002;
+  }
+  .navbar-user-menu {
+    position: relative;
+    z-index: 10001;
+    overflow: visible;
   }
 }
 .navbar-logo {

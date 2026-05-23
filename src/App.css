@@ -1335,6 +1335,8 @@ body {
   grid-template-columns: 380px minmax(0, 1fr);
   gap: 24px;
   align-items: stretch;
+  position: relative;
+  z-index: 1;
 }
 
 .top-places-panel,
@@ -3503,17 +3505,18 @@ body {
 }
 /* New homepage filter fixes */
 .filter-section {
-  max-width: 1120px;
-  margin: 28px auto 32px;
+  max-width: 1360px;
+  margin: 28px auto 40px;
   padding: 0 24px;
   position: relative;
-  z-index: 1000;
+  z-index: 10;
   overflow: visible;
 }
 
 .filter-card {
   position: relative;
   overflow: visible;
+  z-index: 10;
 }
 
 .filter-chip-row {
@@ -3537,12 +3540,12 @@ body {
 .rating-filter-wrapper {
   position: relative;
   flex: 0 0 auto;
-  z-index: 1001;
+  z-index: 50;
 }
 
 .rating-popover {
   position: absolute;
-  top: 52px;
+  top: calc(100% + 12px);
   right: 0;
   width: 190px;
   background: #ffffff;
@@ -3550,7 +3553,7 @@ body {
   border-radius: 18px;
   padding: 12px;
   box-shadow: 0 20px 45px rgba(64, 42, 88, 0.18);
-  z-index: 99999;
+  z-index: 999;
 }
 .rating-popover {
   pointer-events: auto;

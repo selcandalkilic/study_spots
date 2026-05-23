@@ -14,7 +14,7 @@ function FilterSection({
 
   const features = [
   { label: "Quiet", icon: "🤫" },
-  { label: "Wi-Fi", icon: "⌁" },
+  { label: "Wi-Fi", icon: "🛜" },
   { label: "Outlets", icon: "🔌" },
   { label: "Laptop Friendly", icon: "💻" },
   { label: "Long Study Friendly", icon: "⏱" },

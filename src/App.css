@@ -3645,28 +3645,31 @@ body {
   .mobile-main-filters {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
 
   .mobile-extra-filters {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 6px;
     margin-top: 10px;
   }
 
   .filter-chip.mobile-chip {
-    width: 100%;
-    min-width: 0;
-    height: 48px;
-    padding: 0 6px;
-    font-size: 13px;
-    border-radius: 18px;
-    white-space: nowrap;
+  width: 100%;
+  min-width: 0;
+  height: 46px;
+  padding: 0 4px;
+  font-size: 12px;
+  border-radius: 16px;
+  white-space: nowrap;
+  gap: 3px;
   }
 
   .filter-chip.mobile-chip .chip-icon {
-    margin-right: 4px;
+  margin-right: 2px;
+  font-size: 15px;
+  flex-shrink: 0;
   }
 
   .mobile-rating-wrapper {

@@ -77,7 +77,7 @@ const cityCountryMap = {
     outlets_rating: 5,
     noise_rating: 5,
     seating_rating: 5,
-    crowdedness_rating: 3,
+    crowdedness_rating: 5,
     price_rating: null,
     laptop_friendly : true,
     seating_type: "Indoor",

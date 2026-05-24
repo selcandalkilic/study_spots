@@ -6,6 +6,7 @@ import PlaceDetails from "../components/PlaceDetails";
 function PlacePage({ session }) {
   const { slug } = useParams();
   const [place, setPlace] = useState(null);
+  const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +22,12 @@ function PlacePage({ session }) {
       } else {
         setPlace(data);
       }
-
+      const { data: allPlaces, error: allPlacesError } = await supabase
+      .from("places")
+      .select("*");
+      if (!allPlacesError) {
+        setPlaces(allPlaces || []);
+      }
       setLoading(false);
     }
 
@@ -48,7 +54,7 @@ function PlacePage({ session }) {
       </Link>
 
       <PlaceDetails
-        place={place}
+        place={place} places={places}
         onClose={() => {}}
         session={session}
       />

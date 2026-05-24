@@ -11,7 +11,7 @@ function PlaceList({ places }) {
       <div className="places-grid">
         {places.map((place) => (
           <Link
-            to={`/places/${place.id}`}
+            to={`/places/${place.slug}`}
             className="place-card-link"
             key={place.id}
           >

@@ -5,8 +5,9 @@ import "../place-details.css";
 import { Link } from "react-router-dom";
 import "../reviews.css";
 import StudyMap from "./StudyMap";
+import NearbyPlaces from "./NearbyPlaces";
 
-function PlaceDetails({ place, onClose, session }) {
+function PlaceDetails({ place, places, onClose, session }) {
 const [reviews, setReviews] = useState([]);
 const [editingReviewId, setEditingReviewId] = useState(null);
 const [editRating, setEditRating] = useState(5);
@@ -668,8 +669,12 @@ async function toggleSavePlace() {
   </div>
 
   {hasLocation ? (
-    <div className="place-detail-map">
-      <StudyMap places={mapPlace} />
+    <div className="place-map-nearby-layout">
+      <div className="place-detail-map">
+        <StudyMap places={mapPlace} />
+      </div>
+
+      <NearbyPlaces currentPlace={place} places={places} />
     </div>
   ) : (
     <p className="no-location-text">

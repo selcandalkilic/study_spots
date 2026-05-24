@@ -3042,23 +3042,27 @@ body {
     text-align: center;
   }
 
-  .rating-section .stars,
-  .rating-section .star-rating,
-  .rating-section [class*="star"] {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    max-width: 100%;
-    flex-wrap: nowrap;
-  }
+.rating-section .stars,
+.rating-section .star-rating,
+.rating-section [class*="star"] {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 0 !important;
+  max-width: 100%;
+  flex-wrap: nowrap;
+}
 
-  .rating-section .stars button,
-  .rating-section .star-rating button,
-  .rating-section [class*="star"] button {
-    font-size: 30px;
-    padding: 3px;
-    min-width: 0;
-  }
+.rating-section .stars button,
+.rating-section .star-rating button,
+.rating-section [class*="star"] button {
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+}
 
   .rating-section button {
     max-width: 100%;

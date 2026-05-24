@@ -29,13 +29,20 @@ function Navbar({ session, language, setLanguage, isAdmin }) {
   }, [session]);
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-logo">
-        <img src={logo} alt="Study Spots" className="navbar-logo-img" />
-      </Link>
-      <>
-</>
+        <div className="navbar-left">
+          <Link to="/" className="navbar-logo">
+            <img src={logo} alt="Study Spots" className="navbar-logo-img" />
+          </Link>
 
-      <div className="navbar-links">
+          <div className="navbar-links">
+            <Link to="/friends">Friends</Link>
+            <Link to="/groups">Groups</Link>
+            <Link to="/timer">Timer</Link>
+          </div>
+        </div>
+
+
+  
 
         <select
           className="navbar-select"
@@ -53,6 +60,7 @@ function Navbar({ session, language, setLanguage, isAdmin }) {
       <Link to="/import-osm" className="navbar-admin-link">
         Admin
       </Link>
+      
     )}
 
     <div className="navbar-user-menu">
@@ -78,8 +86,21 @@ function Navbar({ session, language, setLanguage, isAdmin }) {
                       My Profile
                     </Link>
 
+                    {profile?.username && (
+                        <Link
+                          to={`/users/${profile.username}`}
+                          onClick={() => setProfileMenuOpen(false)}
+                        >
+                          View public profile
+                        </Link>
+                      )}
+
                     <Link to="/saved-places" onClick={() => setProfileMenuOpen(false)}>
                       Saved places
+                    </Link>
+
+                    <Link to="/friends" onClick={() => setProfileMenuOpen(false)}>
+                      Friends
                     </Link>
 
                     <button
@@ -100,7 +121,7 @@ function Navbar({ session, language, setLanguage, isAdmin }) {
             Log in
           </Link>
 )}
-      </div>
+
     </nav>
   );
 }

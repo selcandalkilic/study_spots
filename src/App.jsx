@@ -13,6 +13,9 @@ import ProfilePage from "./pages/ProfilePage";
 import AddSpotPage from "./pages/AddSpotPage";
 import ImportOsmPage from "./pages/ImportOsmPage";
 import SavedPlacesPage from "./pages/SavedPlacesPage";
+import UserProfilePage from "./pages/UserProfilePage";
+import FriendsPage from "./pages/FriendsPage";
+import BottomNav from "./components/BottomNav";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -191,6 +194,7 @@ return (
          setLanguage={setLanguage}
          isAdmin={isAdmin}
          />
+         <BottomNav session={session} />
 
 <section className="hero-section">
   <div className="hero-text">
@@ -291,10 +295,12 @@ return (
       <Route path="/profile" element={<ProfilePage session={session} />} />
       <Route path="/add-spot" element={<AddSpotPage session={session} />} />
       <Route path="/import-osm" element={<ImportOsmPage session={session} />} />
-      <Route path="/saved-places" element={<SavedPlacesPage session={session} />}
-/>
+      <Route path="/saved-places" element={<SavedPlacesPage session={session} />}/>
+      <Route path="/users/:username" element={<UserProfilePage session={session} />} />  
+      <Route path="/friends" element={<FriendsPage session={session} />}/>
     </Routes>
   </BrowserRouter>
+  
 );
 }
 

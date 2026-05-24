@@ -2597,7 +2597,7 @@ body {
 
   .navbar {
     height: auto;
-    padding: 0;
+    padding: 0 14px;
     position: sticky;
     top: 0;
     z-index: 10000;
@@ -3741,9 +3741,32 @@ body {
   background: #f5f1fa;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 900px) {
   .navbar-links {
-    display: none;
+    display: none !important;
+  }
+  .navbar-left {
+    gap: 0;
+    flex: 1;
+    min-width: 0;
+  }
+  .navbar-right {
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .navbar-right select,
+  .language-select {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+  .navbar-logo {
+    margin-right: 0;
+  }
+  .navbar-login-button,
+  .navbar-login {
+    padding: 11px 16px;
+    font-size: 15px;
+    white-space: nowrap;
   }
 }
 

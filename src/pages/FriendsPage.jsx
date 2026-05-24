@@ -129,6 +129,25 @@ async function fetchFriendData() {
   async function sendFriendRequest(receiverId) {
     if (!session?.user?.id) return;
 
+    const { data: existingRequest, error: existingError } = await supabase
+  .from("friend_requests")
+  .select("*")
+  .or(
+  `and(sender_id.eq.${session.user.id},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${session.user.id})`
+)
+  .maybeSingle();
+
+if (existingError) {
+  console.error(existingError);
+  alert("Could not check existing friend request.");
+  return;
+}
+
+if (existingRequest) {
+  alert("A friend request or friendship already exists with this user.");
+  return;
+}
+
     const { error } = await supabase.from("friend_requests").insert({
       sender_id: session.user.id,
       receiver_id: receiverId,

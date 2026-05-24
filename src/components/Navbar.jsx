@@ -74,19 +74,23 @@ function Navbar({ session, language, setLanguage, isAdmin }) {
 
               {profileMenuOpen && (
                 <div className="navbar-dropdown">
-                  <Link to="/profile" onClick={() => setProfileMenuOpen(false)}>
-                    My Profile
-                  </Link>
+                 <Link to="/profile" onClick={() => setProfileMenuOpen(false)}>
+                      My Profile
+                    </Link>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setProfileMenuOpen(false);
-                      supabase.auth.signOut();
-                    }}
-                  >
-                    Log out
-                  </button>
+                    <Link to="/saved-places" onClick={() => setProfileMenuOpen(false)}>
+                      Saved places
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        supabase.auth.signOut();
+                      }}
+                    >
+                      Log out
+                    </button>
                 </div>
               )}
             </div>

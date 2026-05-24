@@ -27,7 +27,40 @@ const [editCrowdednessRating, setEditCrowdednessRating] = useState(null);
 const [editPriceRating, setEditPriceRating] = useState(null);
 const [editLaptopFriendly, setEditLaptopFriendly] = useState(null);
 const [editSeatingType, setEditSeatingType] = useState("");
+const [isSaved, setIsSaved] = useState(false);
+const [saving, setSaving] = useState(false);
+const [checkingSaved, setCheckingSaved] = useState(true);
 
+
+useEffect(() => {
+  async function checkIfSaved() {
+    setCheckingSaved(true);
+
+    if (!session?.user?.id || !place?.id) {
+      setIsSaved(false);
+      setCheckingSaved(false);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("saved_places")
+      .select("id")
+      .eq("user_id", session.user.id)
+      .eq("place_id", place.id)
+      .maybeSingle();
+
+    if (error) {
+      console.log("Error checking saved place:", error);
+      setIsSaved(false);
+    } else {
+      setIsSaved(Boolean(data));
+    }
+
+    setCheckingSaved(false);
+  }
+
+  checkIfSaved();
+}, [session?.user?.id, place?.id]);
 
 
 function getYesPercentage(fieldName) {
@@ -161,6 +194,48 @@ async function fetchReviews() {
     const profile = (profilesData || []).find(
       (profile) => profile.id === review.user_id
     );
+
+
+
+async function toggleSavePlace() {
+  if (!session?.user) {
+    alert("Please log in to save places.");
+    return;
+  }
+
+  if (!place?.id) return;
+
+  setSaving(true);
+
+  if (isSaved) {
+    const { error } = await supabase
+      .from("saved_places")
+      .delete()
+      .eq("user_id", session.user.id)
+      .eq("place_id", place.id);
+
+    if (error) {
+      console.log("Error removing saved place:", error);
+      alert("Could not remove saved place.");
+    } else {
+      setIsSaved(false);
+    }
+  } else {
+    const { error } = await supabase.from("saved_places").insert({
+      user_id: session.user.id,
+      place_id: place.id,
+    });
+
+    if (error) {
+      console.log("Error saving place:", error);
+      alert("Could not save place.");
+    } else {
+      setIsSaved(true);
+    }
+  }
+
+  setSaving(false);
+}
 
     return {
       ...review,
@@ -317,6 +392,81 @@ const routeUrl = hasLocation
       `${place.name}, ${place.address || ""}, ${place.city || ""}`
     )}`;
 
+    async function savePlace() {
+  if (!session?.user) {
+    alert("Please log in to save places.");
+    return;
+  }
+
+  const { error } = await supabase.from("saved_places").insert({
+    user_id: session.user.id,
+    place_id: place.id,
+  });
+
+  if (error) {
+    if (error.code === "23505") {
+      alert("This place is already saved.");
+    } else {
+      console.log("Error saving place:", error);
+      alert("Could not save place.");
+    }
+  } else {
+    alert("Place saved!");
+  }
+}
+
+async function toggleSavePlace() {
+  if (!session?.user) {
+    alert("Please log in to save places.");
+    return;
+  }
+
+  if (!place?.id) return;
+
+  setSaving(true);
+
+  const { data: existingSave, error: checkError } = await supabase
+    .from("saved_places")
+    .select("id")
+    .eq("user_id", session.user.id)
+    .eq("place_id", place.id)
+    .maybeSingle();
+
+  if (checkError) {
+    console.log("Error checking saved place:", checkError);
+    alert("Could not check saved place.");
+    setSaving(false);
+    return;
+  }
+
+  if (existingSave) {
+    const { error } = await supabase
+      .from("saved_places")
+      .delete()
+      .eq("id", existingSave.id);
+
+    if (error) {
+      console.log("Error removing saved place:", error);
+      alert("Could not remove saved place.");
+    } else {
+      setIsSaved(false);
+    }
+  } else {
+    const { error } = await supabase.from("saved_places").insert({
+      user_id: session.user.id,
+      place_id: place.id,
+    });
+
+    if (error) {
+      console.log("Error saving place:", error);
+      alert("Could not save place.");
+    } else {
+      setIsSaved(true);
+    }
+  }
+
+  setSaving(false);
+}
   return (
    <div className="place-detail-new">
      <a href="/" className="place-back-link">
@@ -353,9 +503,20 @@ const routeUrl = hasLocation
   </div>
 
   <div className="place-action-row">
-    <button type="button" className="place-action-button">
-      ♡ Save
-    </button>
+<button
+  type="button"
+  className="place-action-button"
+  onClick={toggleSavePlace}
+  disabled={saving || checkingSaved}
+>
+  {checkingSaved
+    ? "Checking..."
+    : saving
+    ? "Saving..."
+    : isSaved
+    ? "♥ Saved"
+    : "♡ Save"}
+</button>
 
     <button
       type="button"

@@ -12,6 +12,7 @@ import Navbar from "./components/Navbar";
 import ProfilePage from "./pages/ProfilePage";
 import AddSpotPage from "./pages/AddSpotPage";
 import ImportOsmPage from "./pages/ImportOsmPage";
+import SavedPlacesPage from "./pages/SavedPlacesPage";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -290,6 +291,8 @@ return (
       <Route path="/profile" element={<ProfilePage session={session} />} />
       <Route path="/add-spot" element={<AddSpotPage session={session} />} />
       <Route path="/import-osm" element={<ImportOsmPage session={session} />} />
+      <Route path="/saved-places" element={<SavedPlacesPage session={session} />}
+/>
     </Routes>
   </BrowserRouter>
 );

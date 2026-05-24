@@ -3015,6 +3015,55 @@ body {
     height: 32px !important;
     font-size: 13px !important;
   }
+  @media (max-width: 600px) {
+  .rating-section {
+    width: 100%;
+    max-width: 100%;
+    padding: 22px 14px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .rating-section h2 {
+    font-size: 28px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .rating-section h3 {
+    font-size: 22px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .rating-section p {
+    font-size: 17px;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .rating-section .stars,
+  .rating-section .star-rating,
+  .rating-section [class*="star"] {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  .rating-section .stars button,
+  .rating-section .star-rating button,
+  .rating-section [class*="star"] button {
+    font-size: 30px;
+    padding: 3px;
+    min-width: 0;
+  }
+
+  .rating-section button {
+    max-width: 100%;
+  }
+}
 }
 .review-price-button,
 .price-button {

@@ -11,10 +11,10 @@ function PlacePage({ session }) {
   useEffect(() => {
     async function fetchPlace() {
       const { data, error } = await supabase
-        .from("places")
-        .select("*")
-        .eq("slug", slug)
-        .single();
+    .from("places")
+    .select("*")
+    .eq("slug", slug)
+    .single();
 
       if (error) {
         console.log("Error fetching place:", error);
@@ -26,7 +26,7 @@ function PlacePage({ session }) {
     }
 
     fetchPlace();
-  }, [id]);
+  }, [slug]);
 
   if (loading) {
     return <p>Loading place...</p>;

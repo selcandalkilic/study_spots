@@ -188,8 +188,18 @@ function getAverage(fieldName) {
 }
 
 function formatRating(value) {
-  if (!value) return "Not rated yet";
-  return `${value}/5`;
+  if (value === null || value === undefined || value === "") {
+    return "Not rated yet";
+  }
+
+  const number = Number(value);
+  const rounded = Math.round(number * 10) / 10;
+
+  const displayValue = Number.isInteger(rounded)
+    ? rounded.toString()
+    : rounded.toFixed(1);
+
+  return `${displayValue}/5`;
 }
 function formatPriceLevel(value) {
   if (!value) return "Not rated yet";
@@ -201,17 +211,23 @@ function formatPriceLevel(value) {
   if (number <= 8) return "€€€ Pricey";
   return "€€€€ Expensive";
 }
-function formatRatingLabel(value) {
-  if (!value) return "Not rated yet";
-
+function formatRatingNumber(value) {
   const number = Number(value);
+  const rounded = Math.round(number * 10) / 10;
 
-  if (number < 2) return `Bad · ${number.toFixed(1)}/5`;
-  if (number < 3) return `Okay · ${number.toFixed(1)}/5`;
-  if (number < 4) return `Good · ${number.toFixed(1)}/5`;
-  if (number < 4.5) return `Very good · ${number.toFixed(1)}/5`;
-  return `Amazing · ${number.toFixed(1)}/5`;
+  return Number.isInteger(rounded)
+    ? rounded.toString()
+    : rounded.toFixed(1);
 }
+
+function formatPriceRating(value) {
+  if (value === null || value === undefined || value === "") {
+    return "Not rated yet";
+  }
+
+  return `${formatRatingNumber(value)}/10`;
+}
+
 
 function scrollToReviewForm() {
   const reviewSection = document.getElementById("review-form-section");
@@ -331,7 +347,7 @@ const routeUrl = hasLocation
     <div className="place-big-rating">
       <strong>{averageStudyRating || "—"}</strong>
       <span>
-        ⭐ {averageStudyRating ? `${averageStudyRating}/5` : "No reviews"}
+        ⭐ {averageStudyRating ? formatRating(averageStudyRating) : "No reviews"}
       </span>
     </div>
   </div>
@@ -366,25 +382,25 @@ const routeUrl = hasLocation
   <div className="place-info-card">
     <span>💻</span>
     <strong>WiFi</strong>
-    <p>{formatRatingLabel(averageWifiRating)}</p>
+    <p>{formatRating(averageWifiRating)}</p>
   </div>
 
   <div className="place-info-card">
     <span>🔌</span>
     <strong>Power outlets</strong>
-    <p>{formatRatingLabel(averageOutletsRating)}</p>
+    <p>{formatRating(averageOutletsRating)}</p>
   </div>
 
   <div className="place-info-card">
     <span>🤫</span>
     <strong>Quietness</strong>
-    <p>{formatRatingLabel(averageNoiseRating)}</p>
+    <p>{formatRating(averageNoiseRating)}</p>
   </div>
 
   <div className="place-info-card">
     <span>🪑</span>
     <strong>Seating</strong>
-    <p>{formatRatingLabel(averageSeatingRating)}</p>
+    <p>{formatRating(averageSeatingRating)}</p>
   </div>
 
     <div className="place-info-card">
@@ -400,7 +416,7 @@ const routeUrl = hasLocation
   <div className="place-info-card">
     <span>💸</span>
     <strong>Price</strong>
-    <p>{formatPriceLevel(averagePriceRating)}</p>
+    <p>{formatPriceRating(averagePriceRating)}</p>
   </div>
 </div>
 <section className="place-ratings-section">
@@ -468,7 +484,7 @@ const routeUrl = hasLocation
     <div className="rating-row">
       <span>Price level</span>
       <strong>
-        {averagePriceRating ? `${averagePriceRating}/10` : "Not rated yet"}
+        {formatPriceRating(averagePriceRating)}
       </strong>
     </div>
 

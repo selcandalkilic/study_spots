@@ -12,6 +12,8 @@ function ImportOsmPage({ session }) {
   const [importingId, setImportingId] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
+  const [pendingPlaces, setPendingPlaces] = useState([]);
+  const [pendingLoading, setPendingLoading] = useState(false);
 
   useEffect(() => {
   async function checkAdmin() {
@@ -38,6 +40,67 @@ function ImportOsmPage({ session }) {
 
   checkAdmin();
 }, [session]);
+  useEffect(() => {
+  if (isAdmin) {
+    fetchPendingPlaces();
+  }
+}, [isAdmin]);
+
+async function fetchPendingPlaces() {
+  setPendingLoading(true);
+
+  const { data, error } = await supabase
+    .from("places")
+    .select("*")
+    .eq("status", "pending")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.log("Error fetching pending places:", error);
+  } else {
+    setPendingPlaces(data || []);
+  }
+
+  setPendingLoading(false);
+}
+
+async function approvePlace(placeId) {
+  const { error } = await supabase
+    .from("places")
+    .update({ status: "approved" })
+    .eq("id", placeId);
+
+  if (error) {
+    alert(error.message);
+    console.log("Approve error:", error);
+    return;
+  }
+
+  alert("Place approved!");
+  fetchPendingPlaces();
+}
+
+async function rejectPlace(placeId) {
+  const confirmReject = window.confirm(
+    "Reject this place? It will not appear publicly."
+  );
+
+  if (!confirmReject) return;
+
+  const { error } = await supabase
+    .from("places")
+    .update({ status: "rejected" })
+    .eq("id", placeId);
+
+  if (error) {
+    alert(error.message);
+    console.log("Reject error:", error);
+    return;
+  }
+
+  alert("Place rejected.");
+  fetchPendingPlaces();
+}
 
   async function searchOsm() {
     setLoading(true);
@@ -137,6 +200,82 @@ function ImportOsmPage({ session }) {
 <p>
   Import places from OpenStreetMap, review imported data, and manage study spot content.
 </p>
+
+<section className="admin-section">
+  <div className="admin-section-header">
+    <div>
+      <h2>Pending user submissions</h2>
+      <p>Review places added by users before they become public.</p>
+    </div>
+
+    <button type="button" onClick={fetchPendingPlaces}>
+      Refresh
+    </button>
+  </div>
+
+  {pendingLoading ? (
+    <p>Loading pending places...</p>
+  ) : pendingPlaces.length === 0 ? (
+    <p className="admin-empty-text">No pending places right now.</p>
+  ) : (
+    <div className="pending-places-list">
+      {pendingPlaces.map((place) => (
+        <div className="pending-place-card" key={place.id}>
+          <div>
+            <h3>{place.name}</h3>
+
+            <p>
+              <strong>Category:</strong> {place.category || "No category"}
+            </p>
+
+            <p>
+              <strong>Location:</strong> {place.city}, {place.country}
+            </p>
+
+            <p>
+              <strong>Address:</strong> {place.address || "No address"}
+            </p>
+
+            <p>
+              <strong>Description:</strong>{" "}
+              {place.description || "No description"}
+            </p>
+
+            <small>
+              Slug: {place.slug || "No slug"} · Status: {place.status}
+            </small>
+          </div>
+
+          {place.image_url && (
+            <img
+              className="pending-place-image"
+              src={place.image_url}
+              alt={place.name}
+            />
+          )}
+
+          <div className="pending-place-actions">
+            <button
+              type="button"
+              onClick={() => approvePlace(place.id)}
+            >
+              Approve
+            </button>
+
+            <button
+              type="button"
+              className="reject-button"
+              onClick={() => rejectPlace(place.id)}
+            >
+              Reject
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</section>
+
 
         {!session && (
           <p className="import-warning">

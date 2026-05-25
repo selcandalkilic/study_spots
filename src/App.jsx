@@ -20,7 +20,23 @@ import TimerPage from "./pages/TimerPage";
 import EditPlacePage from "./pages/EditPlacePage";
 import { Helmet } from "react-helmet-async";
 
+const getPlaceholderImage = (category) => {
+  const normalized = category?.toLowerCase();
 
+  if (normalized === "library") {
+    return "/placeholders/library-placeholder.png";
+  }
+
+  if (normalized === "cafe") {
+    return "/placeholders/cafe-placeholder.png";
+  }
+
+  if (normalized === "university") {
+    return "/placeholders/university-placeholder.png";
+  }
+
+  return "/placeholders/library-placeholder.png";
+};
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -365,10 +381,19 @@ return (
           className="top-place-card"
           key={place.id}
         >
-          {place.image_url ? (
-            <img src={place.image_url} alt={place.name} />
+          {place.cover_photo_url || place.image_url ? (
+            <img
+              src={place.cover_photo_url || place.image_url}
+              alt={place.name}
+            />
           ) : (
-            <div className="top-place-placeholder">No image</div>
+            <div className={`top-place-placeholder-icon ${place.category?.toLowerCase()}`}>
+              {place.category === "Cafe"
+                ? "☕"
+                : place.category === "University"
+                ? "🎓"
+                : "📚"}
+            </div>
           )}
 
           <div className="top-place-info">

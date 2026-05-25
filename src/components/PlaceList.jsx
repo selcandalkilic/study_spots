@@ -1,5 +1,23 @@
 import { Link } from "react-router-dom";
 
+const getPlaceholderImage = (category) => {
+  const normalized = category?.toLowerCase();
+
+  if (normalized === "library") {
+    return "/placeholders/library-placeholder.png";
+  }
+
+  if (normalized === "cafe") {
+    return "/placeholders/cafe-placeholder.png";
+  }
+
+  if (normalized === "university") {
+    return "/placeholders/university-placeholder.png";
+  }
+
+  return "/placeholders/library-placeholder.png";
+};
+
 function PlaceList({ places }) {
   return (
     <section className="places-section">
@@ -16,17 +34,18 @@ function PlaceList({ places }) {
             key={place.id}
           >
             <article className="place-card">
-              {place.image_url ? (
-                <img
-                  className="place-card-image"
-                  src={place.image_url}
-                  alt={place.name}
-                />
-              ) : (
-                <div className="place-card-image-placeholder">
-                  No image yet
-                </div>
-              )}
+            <img
+              className="place-card-image"
+              src={
+                place.cover_photo_url ||
+                place.image_url ||
+                getPlaceholderImage(place.category)
+              }
+              alt={place.name}
+              onError={(e) => {
+                e.currentTarget.src = getPlaceholderImage(place.category);
+              }}
+            />
 
               <div className="place-card-content">
                 <div className="place-card-top">

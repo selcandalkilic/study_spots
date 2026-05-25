@@ -7,6 +7,24 @@ import "../reviews.css";
 import StudyMap from "./StudyMap";
 import NearbyPlaces from "./NearbyPlaces";
 
+const getPlaceholderImage = (category) => {
+  const normalized = category?.toLowerCase();
+
+  if (normalized === "library") {
+    return "/placeholders/library-placeholder.png";
+  }
+
+  if (normalized === "cafe") {
+    return "/placeholders/cafe-placeholder.png";
+  }
+
+  if (normalized === "university") {
+    return "/placeholders/university-placeholder.png";
+  }
+
+  return "/placeholders/library-placeholder.png";
+};
+
 function PlaceDetails({ place, places, onClose, session }) {
 const [reviews, setReviews] = useState([]);
 const [editingReviewId, setEditingReviewId] = useState(null);
@@ -640,26 +658,29 @@ const coverCredit =
       ← Back to places
     </a>
 
-    <div className="place-gallery">
-      {place.cover_photo_url || place.image_url ? (
-        <>
-          <img
-            className="place-main-image"
-            src={place.cover_photo_url || place.image_url}
-            alt={place.name}
-          />
+   <div className="place-gallery">
+  <img
+    className="place-main-image"
+    src={
+      place.cover_photo_url ||
+      place.image_url ||
+      getPlaceholderImage(place.category)
+    }
+    alt={place.name}
+    onError={(e) => {
+      e.currentTarget.src = getPlaceholderImage(place.category);
+    }}
+  />
 
-          <p className="image-credit">
-            Photo credit:{" "}
-            {place.cover_photo_credit ||
-              place.image_credit ||
-              "No credit added yet"}
-          </p>
-        </>
-      ) : (
-        <div className="place-main-image-placeholder">No image yet</div>
-      )}
-    </div>
+  {(place.cover_photo_url || place.image_url) && (
+    <p className="image-credit">
+      Photo credit:{" "}
+      {place.cover_photo_credit ||
+        place.image_credit ||
+        "No credit added yet"}
+    </p>
+  )}
+</div>
 
   <div className="place-title-row">
     <div>

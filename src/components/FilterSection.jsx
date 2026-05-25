@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
 
 function FilterSection({
   searchText,
   setSearchText,
+
+  cityOptions,
   selectedCity,
   setSelectedCity,
+
+  categoryOptions,
+  selectedCategory,
+  setSelectedCategory,
+
+  sortOption,
+  setSortOption,
+
   selectedFeatures,
   setSelectedFeatures,
   selectedRating,
@@ -12,6 +23,11 @@ function FilterSection({
 }) {
   const [ratingOpen, setRatingOpen] = useState(false);
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
+  const [cityDropdownOpen, setCityDropdownOpen] = useState(false);
+  const [citySearchText, setCitySearchText] = useState("");
+  const [cityResults, setCityResults] = useState([]);
+  const [cityLoading, setCityLoading] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   const features = [
   { label: "Quiet", icon: "🤫" },
@@ -23,7 +39,36 @@ function FilterSection({
   const mainMobileFeatures = features.filter((feature) => ["Quiet", "Wi-Fi", "Outlets"].includes(feature.label));
   const extraMobileFeatures = features.filter((feature) => ["Laptop Friendly", "Long Study Friendly"].includes(feature.label));
 
-  const cities = ["All", "Linz", "Istanbul", "Vienna"];
+  useEffect(() => {
+    async function searchCities() {
+      const search = citySearchText.trim();
+
+      if (search.length < 2) {
+        setCityResults([]);
+        return;
+      }
+
+      setCityLoading(true);
+
+      const { data, error } = await supabase
+        .from("world_cities")
+        .select("city, country, iso2, population")
+        .ilike("city", `${search}%`)
+        .order("population", { ascending: false })
+        .limit(20);
+
+      if (error) {
+        console.log("City search error:", error);
+        setCityResults([]);
+      } else {
+        setCityResults(data || []);
+      }
+
+      setCityLoading(false);
+    }
+
+    searchCities();
+  }, [citySearchText]);
 
   function toggleFeature(feature) {
     if (selectedFeatures.includes(feature)) {
@@ -32,6 +77,17 @@ function FilterSection({
       setSelectedFeatures([...selectedFeatures, feature]);
     }
   }
+  const sortOptions = [
+  { value: "recommended", label: "Recommended" },
+  { value: "rating-high", label: "Highest rated" },
+  { value: "most-reviewed", label: "Most reviewed" },
+  { value: "newest", label: "Newest" },
+  { value: "closest", label: "Closest" },
+];
+
+const selectedSortLabel =
+  sortOptions.find((option) => option.value === sortOption)?.label ||
+  "Recommended";
 
   return (
     <section className="filter-section">
@@ -48,19 +104,89 @@ function FilterSection({
             />
           </div>
 
-          <div className="city-select-wrapper">
-            <select
-            className="city-select"
-            value={selectedCity}
-            onChange={(e) => setSelectedCity(e.target.value)}
+          <div className="city-search-wrapper">
+            <button
+              type="button"
+              className="city-search-button"
+              onClick={() => setCityDropdownOpen(!cityDropdownOpen)}
             >
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+              {selectedCity === "All" ? "All cities" : selectedCity}
+              <span>⌄</span>
+            </button>
+
+            {cityDropdownOpen && (
+              <div className="city-search-menu">
+                <input
+                  type="text"
+                  placeholder="Type city..."
+                  value={citySearchText}
+                  onChange={(e) => setCitySearchText(e.target.value)}
+                />
+
+                <div className="city-search-options">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedCity("All");
+                      setCityDropdownOpen(false);
+                      setCitySearchText("");
+                      setCityResults([]);
+                    }}
+                  >
+                    All cities
+                  </button>
+
+                  {citySearchText.trim().length < 2 ? (
+                    <p>Type at least 2 letters</p>
+                  ) : cityLoading ? (
+                    <p>Loading cities...</p>
+                  ) : cityResults.length === 0 ? (
+                    <p>No cities found</p>
+                  ) : (
+                    cityResults.map((item) => (
+                      <button
+                        type="button"
+                        key={`${item.city}-${item.iso2}-${item.population}`}
+                        onClick={() => {
+                          setSelectedCity(item.city);
+                          setCityDropdownOpen(false);
+                          setCitySearchText("");
+                          setCityResults([]);
+                        }}
+                      >
+                        {item.city}
+                        {item.country ? `, ${item.country}` : ""}
+                      </button>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
+
+         <select
+          className="filter-select"
+          value={sortOption}
+          onChange={(e) => setSortOption(e.target.value)}
+        >
+          <option value="recommended">Recommended</option>
+          <option value="rating-high">Highest rated</option>
+          <option value="most-reviewed">Most reviewed</option>
+          <option value="newest">Newest</option>
+          <option value="closest">Closest</option>
+        </select>
+
+          <select
+            className="filter-select"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            {(categoryOptions || ["All"]).map((category) => (
+              <option key={category} value={category}>
+                {category === "All" ? "All categories" : category}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="filter-chip-row desktop-filter-row">

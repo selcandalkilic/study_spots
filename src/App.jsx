@@ -17,6 +17,8 @@ import UserProfilePage from "./pages/UserProfilePage";
 import FriendsPage from "./pages/FriendsPage";
 import BottomNav from "./components/BottomNav";
 import TimerPage from "./pages/TimerPage";
+import EditPlacePage from "./pages/EditPlacePage";
+
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -402,7 +404,8 @@ return (
       />
 
       <Route path="/login" element={<LoginPage session={session} />} />
-      <Route path="/places/:slug" element={<PlacePage session={session} />} />
+      <Route path="/places/:slug" element={<PlacePage session={session} isAdmin={isAdmin} />}/>
+      <Route path="/places/:slug/edit" element={<EditPlacePage session={session} isAdmin={isAdmin} />}/>
       <Route path="/profile" element={<ProfilePage session={session} />} />
       <Route path="/add-spot" element={<AddSpotPage session={session} />} />
       <Route path="/import-osm" element={<ImportOsmPage session={session} />} />

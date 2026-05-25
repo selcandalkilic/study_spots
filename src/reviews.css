@@ -258,3 +258,63 @@
   text-align: center;
   color: #756b83;
 }
+
+.review-photo-upload {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #eee8f6;
+  border-radius: 20px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.review-photo-upload label {
+  margin: 0;
+  color: #3d314d;
+  font-weight: 800;
+}
+
+.review-photo-upload p {
+  margin: 6px 0 0;
+  color: #8a7a9d;
+  font-size: 14px;
+}
+
+.review-photo-upload-button {
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: #6f5b86;
+  color: white !important;
+  font-weight: 800;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.review-photo-upload-button input {
+  display: none;
+}
+
+.review-photo-count {
+  margin: 8px 0 0;
+  color: #6f5b86;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+@media (max-width: 700px) {
+  .review-photo-upload {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .review-photo-upload-button {
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+  }
+}

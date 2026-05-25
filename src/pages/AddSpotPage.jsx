@@ -70,6 +70,7 @@ const cityCountryMap = {
     latitude: "",
     longitude: "",
     image_url: "",
+    image_credit: "",
     opening_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     opening_time: "09:00",
     closing_time: "18:00",
@@ -260,6 +261,7 @@ function createSlug(text) {
           latitude: Number(form.latitude),
           longitude: Number(form.longitude),
           image_url: form.image_url,
+          image_credit: form.image_credit,
           quiet: form.noise_rating >= 4,
           opening_hours: openingHours,
           opening_days: form.opening_days,
@@ -551,6 +553,13 @@ useEffect(() => {
                 alt="Place preview"
             />
             )}
+            <label>Photo credit</label>
+            <input
+              type="text"
+              placeholder="Example: Own photo, Photo by Selcan, or Unsplash / Photographer"
+              value={form.image_credit}
+              onChange={(e) => updateField("image_credit", e.target.value)}
+            />
 
           <div className="opening-days-section">
             <label>Open days</label>

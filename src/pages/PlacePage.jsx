@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import PlaceDetails from "../components/PlaceDetails";
 
-function PlacePage({ session }) {
+function PlacePage({ session , isAdmin}) {
   const { slug } = useParams();
   const [place, setPlace] = useState(null);
   const [places, setPlaces] = useState([]);
@@ -52,6 +52,12 @@ function PlacePage({ session }) {
       <Link to="/" className="back-home-link">
         ← Back to all places
       </Link>
+
+      {isAdmin && (
+        <Link to={`/places/${place.slug}/edit`} className="admin-edit-place-button">
+          Edit place
+        </Link>
+      )}
 
       <PlaceDetails
         place={place} places={places}

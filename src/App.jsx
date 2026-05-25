@@ -18,6 +18,8 @@ import FriendsPage from "./pages/FriendsPage";
 import BottomNav from "./components/BottomNav";
 import TimerPage from "./pages/TimerPage";
 import EditPlacePage from "./pages/EditPlacePage";
+import { Helmet } from "react-helmet-async";
+
 
 
 function App() {
@@ -80,9 +82,10 @@ const t = text[language];
 
 useEffect(() => {
   async function fetchPlaces() {
-   const { data, error } = await supabase
+  const { data, error } = await supabase
   .from("places")
-  .select("*");
+  .select("*")
+  .eq("status", "approved");
 
   console.log("Supabase places:", data);
   console.log("Supabase error:", error);
@@ -292,6 +295,22 @@ return (
         path="/"
         element={
          <div>
+          <Helmet>
+            <title>Study Spots | Find Study-Friendly Cafes, Libraries and Workspaces</title>
+            <meta
+              name="description"
+              content="Find study-friendly cafes, libraries, universities and workspaces in Linz, Vienna and Istanbul. Filter by WiFi, outlets, quietness and laptop-friendly places."
+            />
+            <link rel="canonical" href="https://studyspots.io/" />
+
+            <meta property="og:title" content="Study Spots | Find Places to Study" />
+            <meta
+              property="og:description"
+              content="Discover study-friendly cafes, libraries and workspaces near you."
+            />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content="https://studyspots.io/" />
+          </Helmet>
          <Navbar
          session={session}
          language={language}

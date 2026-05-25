@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://studyspots.io/</loc>
+  </url>
+
+  <url>
+    <loc>https://studyspots.io/login</loc>
+  </url>
+
+  <url>
+    <loc>https://studyspots.io/add-spot</loc>
+  </url>
+
+  <url>
+    <loc>https://studyspots.io/places/jku-library</loc>
+  </url>
+
+  <url>
+    <loc>https://studyspots.io/places/cafe-gerberei</loc>
+  </url>
+</urlset>

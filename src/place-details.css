@@ -477,3 +477,11 @@
     height: 240px;
   }
 }
+
+.image-credit {
+  margin: 8px 4px 0;
+  color: #8a7a9d;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+}

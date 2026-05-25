@@ -31,6 +31,163 @@ const [editSeatingType, setEditSeatingType] = useState("");
 const [isSaved, setIsSaved] = useState(false);
 const [saving, setSaving] = useState(false);
 const [checkingSaved, setCheckingSaved] = useState(true);
+const [reviewPhotos, setReviewPhotos] = useState([]);
+const [galleryOpen, setGalleryOpen] = useState(false);
+const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+
+useEffect(() => {
+  async function fetchReviewPhotos() {
+    if (!place?.id) return;
+
+    const { data, error } = await supabase
+      .from("review_photos")
+      .select(`
+        id,
+        image_url,
+        created_at,
+        user_id,
+        profiles:user_id (
+          username,
+          full_name
+        )
+      `)
+      .eq("place_id", place.id)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.log("Review photos fetch error:", error);
+      return;
+    }
+
+    setReviewPhotos(data || []);
+  }
+
+  fetchReviewPhotos();
+}, [place?.id]);useEffect(() => {
+  async function fetchReviewPhotos() {
+    if (!place?.id) return;
+
+    const { data, error } = await supabase
+      .from("review_photos")
+      .select(`
+        id,
+        image_url,
+        created_at,
+        user_id,
+        profiles:user_id (
+          username,
+          full_name
+        )
+      `)
+      .eq("place_id", place.id)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.log("Review photos fetch error:", error);
+      return;
+    }
+
+    setReviewPhotos(data || []);
+  }
+
+  fetchReviewPhotos();
+}, [place?.id]);
+
+
+{reviewPhotos.length > 0 && (
+  <div className="place-photo-strip">
+    {reviewPhotos.slice(0, 4).map((photo, index) => (
+      <button
+        type="button"
+        key={photo.id}
+        className="place-photo-thumb"
+        onClick={() => {
+          setActivePhotoIndex(index);
+          setGalleryOpen(true);
+        }}
+      >
+        <img src={photo.image_url} alt="User uploaded place" />
+
+        {index === 3 && reviewPhotos.length > 4 && (
+          <span>+{reviewPhotos.length - 4}</span>
+        )}
+      </button>
+    ))}
+  </div>
+)}
+{galleryOpen && reviewPhotos.length > 0 && (
+  <div className="photo-gallery-modal">
+    <button
+      type="button"
+      className="photo-gallery-close"
+      onClick={() => setGalleryOpen(false)}
+    >
+      ×
+    </button>
+
+    <button
+      type="button"
+      className="photo-gallery-arrow"
+      onClick={() =>
+        setActivePhotoIndex((prev) =>
+          prev === 0 ? reviewPhotos.length - 1 : prev - 1
+        )
+      }
+    >
+      ‹
+    </button>
+
+    <div className="photo-gallery-content">
+      <img
+        src={reviewPhotos[activePhotoIndex].image_url}
+        alt="Study spot gallery"
+      />
+
+      <p>
+        Photo by{" "}
+        {reviewPhotos[activePhotoIndex].profiles?.username ||
+          reviewPhotos[activePhotoIndex].profiles?.full_name ||
+          "Study Spots user"}
+      </p>
+    </div>
+
+    <button
+      type="button"
+      className="photo-gallery-arrow"
+      onClick={() =>
+        setActivePhotoIndex((prev) =>
+          prev === reviewPhotos.length - 1 ? 0 : prev + 1
+        )
+      }
+    >
+      ›
+    </button>
+  </div>
+)}
+
+async function chooseCoverPhoto(photo) {
+  const credit =
+    photo.profiles?.username ||
+    photo.profiles?.full_name ||
+    "Study Spots user";
+
+  const { error } = await supabase
+    .from("places")
+    .update({
+      cover_photo_url: photo.image_url,
+      cover_photo_credit: credit,
+      cover_photo_source: "review",
+      cover_review_photo_id: photo.id,
+    })
+    .eq("id", placeId);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  alert("Cover photo updated.");
+}
 
 
 useEffect(() => {
@@ -468,19 +625,41 @@ async function toggleSavePlace() {
 
   setSaving(false);
 }
+
+const coverImageUrl =
+  place.cover_photo_url || place.image_url || null;
+
+const coverCredit =
+  place.cover_photo_credit || place.image_credit || "";
+
+
+
   return (
    <div className="place-detail-new">
      <a href="/" className="place-back-link">
       ← Back to places
     </a>
 
-  <div className="place-gallery">
-    {place.image_url ? (
-      <img className="place-main-image" src={place.image_url} alt={place.name} />
-    ) : (
-      <div className="place-main-image-placeholder">No image yet</div>
-    )}
-  </div>
+    <div className="place-gallery">
+      {place.cover_photo_url || place.image_url ? (
+        <>
+          <img
+            className="place-main-image"
+            src={place.cover_photo_url || place.image_url}
+            alt={place.name}
+          />
+
+          <p className="image-credit">
+            Photo credit:{" "}
+            {place.cover_photo_credit ||
+              place.image_credit ||
+              "No credit added yet"}
+          </p>
+        </>
+      ) : (
+        <div className="place-main-image-placeholder">No image yet</div>
+      )}
+    </div>
 
   <div className="place-title-row">
     <div>

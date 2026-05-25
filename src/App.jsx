@@ -29,6 +29,8 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [selectedFeatures, setSelectedFeatures] = useState([]);
   const [selectedRating, setSelectedRating] = useState(null);
+  const [sortOption, setSortOption] = useState("recommended");
+  const [userLocation, setUserLocation] = useState(null);
   const text = {
   EN: {
     heroTitle: "Find the perfect place to focus.",
@@ -94,6 +96,28 @@ useEffect(() => {
   fetchPlaces();
 }, []);
 
+useEffect(() => {
+  if (sortOption !== "closest") return;
+
+  if (!navigator.geolocation) {
+    alert("Your browser does not support location.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setUserLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
+    },
+    (error) => {
+      console.log("Location error:", error);
+      alert("Location permission is needed to sort by closest.");
+    }
+  );
+}, [sortOption]);
+
  useEffect(() => {
   supabase.auth.getSession().then(({ data: { session } }) => {
     setSession(session);
@@ -107,6 +131,8 @@ useEffect(() => {
 
   return () => subscription.unsubscribe();
 }, []);
+
+
 
 useEffect(() => {
   async function checkAdmin() {
@@ -144,16 +170,57 @@ function hasFeature(value) {
   }
   return false;
 }
+function getDistanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
+}
+
+function getPlaceDistance(place) {
+  if (!userLocation || !place.latitude || !place.longitude) {
+    return Infinity;
+  }
+
+  return getDistanceKm(
+    userLocation.latitude,
+    userLocation.longitude,
+    Number(place.latitude),
+    Number(place.longitude)
+  );
+}
+
+
+const categoryOptions = ["All", "Cafe", "Library", "University", "Other"];
 
 const filteredPlaces = places.filter((place) => {
-  const searchMatches =
-    place.name?.toLowerCase().includes(searchText.toLowerCase()) ||
-    place.city?.toLowerCase().includes(searchText.toLowerCase()) ||
-    place.category?.toLowerCase().includes(searchText.toLowerCase());
+  const normalizedSearch = searchText.toLowerCase().trim();
+
+const searchMatches =
+  normalizedSearch === "" ||
+  place.name?.toLowerCase().includes(normalizedSearch) ||
+  place.city?.toLowerCase().includes(normalizedSearch) ||
+  place.country?.toLowerCase().includes(normalizedSearch) ||
+  place.category?.toLowerCase().includes(normalizedSearch);
 
   const cityMatches =
   selectedCity === "All" ||
   place.city?.toLowerCase() === selectedCity.toLowerCase();
+
+  const categoryMatches =
+  selectedCategory === "All" ||
+  place.category?.toLowerCase() === selectedCategory.toLowerCase();
 
   const placeRating = Number(place.study_rating || 0);
 
@@ -174,7 +241,41 @@ const featureMatches = selectedFeatures.every((feature) => {
   return true;
 });
 
-  return searchMatches && cityMatches && ratingMatches && featureMatches;
+  return (
+  searchMatches &&
+  cityMatches &&
+  categoryMatches &&
+  ratingMatches &&
+  featureMatches
+);
+});
+
+function getReviewCount(place) {
+  return Number(place.review_count || place.reviews_count || place.total_reviews || 0);
+}
+
+function getPlaceRating(place) {
+  return Number(place.study_rating || place.average_rating || place.avg_rating || 0);
+}
+
+const sortedPlaces = [...filteredPlaces].sort((a, b) => {
+  if (sortOption === "rating-high") {
+    return getPlaceRating(b) - getPlaceRating(a);
+  }
+
+  if (sortOption === "most-reviewed") {
+    return getReviewCount(b) - getReviewCount(a);
+  }
+
+  if (sortOption === "newest") {
+    return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+  }
+
+  if (sortOption === "closest") {
+  return getPlaceDistance(a) - getPlaceDistance(b);
+}
+
+  return 0;
 });
 
 if (loading) {
@@ -209,8 +310,17 @@ return (
 <FilterSection
   searchText={searchText}
   setSearchText={setSearchText}
+
   selectedCity={selectedCity}
   setSelectedCity={setSelectedCity}
+
+  categoryOptions={categoryOptions}
+  selectedCategory={selectedCategory}
+  setSelectedCategory={setSelectedCategory}
+
+  sortOption={sortOption}
+  setSortOption={setSortOption}
+
   selectedFeatures={selectedFeatures}
   setSelectedFeatures={setSelectedFeatures}
   selectedRating={selectedRating}
@@ -221,13 +331,13 @@ return (
   <div className="top-places-panel">
     <div className="top-places-header">
       <h2>
-        {filteredPlaces.length} {t.placesFound}
+        {sortedPlaces.length} {t.placesFound}
       </h2>
       <p>{t.topPlaces}</p>
     </div>
 
     <div className="top-places-list">
-      {filteredPlaces.slice(0, 4).map((place) => (
+      {sortedPlaces.slice(0, 4).map((place) => (
         <Link
           to={`/places/${place.slug || place.id}`}
           className="top-place-card"
@@ -265,7 +375,7 @@ return (
 
   <div className="map-panel">
     <StudyMap
-      places={filteredPlaces}
+      places={sortedPlaces}
       onSelectPlace={setSelectedPlace}
     />
   </div>
@@ -285,7 +395,7 @@ return (
   </div>
 </section>
 
-            <PlaceList places={filteredPlaces} />
+            <PlaceList places={sortedPlaces} />
           </div>
         }
       />

@@ -252,7 +252,7 @@ function createSlug(text) {
     const { data: newPlace, error: placeError } = await supabase.from("places").insert([
         {
           name: form.name,
-          slug: createSlug(form.name),
+          slug: createSlug(`${form.name}-${form.city}`),
           city: form.city,
           country: form.country,
           category: form.category,
@@ -276,7 +276,7 @@ function createSlug(text) {
           price_rating:
             form.price_rating !== null ? Number(form.price_rating) : null,
           created_by: session.user.id,
-          status: "approved",
+          status: "pending",
         },
       ])
       .select()
@@ -318,7 +318,7 @@ function createSlug(text) {
       );
       navigate("/");
     } else {
-      alert("Study spot added!");
+      alert("Study spot submitted! An admin will review it before it becomes public.");
       navigate("/");
     }
   }

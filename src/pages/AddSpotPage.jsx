@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import StudyMap from "../components/StudyMap";
+import { Country } from "country-state-city";
 
 function StarRating({ label, value, onChange }) {
   return (
@@ -51,7 +52,6 @@ function AddSpotPage({ session }) {
     "23:00", "23:30",
     "00:00",
   ];
-const cityOptions = ["Linz", "Vienna", "Istanbul"];
 
 const cityCountryMap = {
   Linz: "Austria",
@@ -61,8 +61,9 @@ const cityCountryMap = {
 
   const [form, setForm] = useState({
     name: "",
-    city: "Linz",
-    country: "Austria",
+    city: "",
+    country: "",
+    country_code: "",
     category: "Cafe",
     description: "",
     address: "",
@@ -89,10 +90,29 @@ const cityCountryMap = {
   const [searchingAddress, setSearchingAddress] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const countries = Country.getAllCountries();
+  const [cityOptions, setCityOptions] = useState([]);
 
+const selectedCountry = countries.find(
+  (country) => country.name === form.country
+);
   function updateField(field, value) {
     setForm({ ...form, [field]: value });
   }
+  function handleCountryChange(e) {
+  setForm((prev) => ({
+    ...prev,
+    country: e.target.value,
+    city: "",
+  }));
+}
+
+function handleCityChange(e) {
+  setForm((prev) => ({
+    ...prev,
+    city: e.target.value,
+  }));
+}
 
   function toggleDay(day) {
     if (form.opening_days.includes(day)) {
@@ -164,6 +184,9 @@ async function searchAddress() {
   const fileExtension = file.name.split(".").pop();
   const filePath = `${session.user.id}/${Date.now()}.${fileExtension}`;
 
+  const countries = Country.getAllCountries();
+  const [cityOptions, setCityOptions] = useState([]);
+
   const { error } = await supabase.storage
     .from("place-images")
     .upload(filePath, file);
@@ -225,9 +248,7 @@ function createSlug(text) {
         ? "Closed"
         : `${form.opening_days.join(", ")} ${form.opening_time}-${form.closing_time}`;
 
-    const { data: newPlace, error: placeError } = await supabase
-      .from("places")
-      .insert([
+    const { data: newPlace, error: placeError } = await supabase.from("places").insert([
         {
           name: form.name,
           slug: createSlug(form.name),
@@ -331,6 +352,58 @@ function createSlug(text) {
         ]
       : [];
 
+        function handleCountryChange(e) {
+  const selectedCode = e.target.value;
+
+  const selectedCountry = countries.find(
+    (country) => country.isoCode === selectedCode
+  );
+
+  setForm((prev) => ({
+    ...prev,
+    country: selectedCountry?.name || "",
+    country_code: selectedCode,
+    city: "",
+  }));
+}
+
+function handleCityChange(e) {
+  setForm((prev) => ({
+    ...prev,
+    city: e.target.value,
+  }));
+}
+
+useEffect(() => {
+  async function fetchCitiesForCountry() {
+    if (!form.country_code) {
+      setCityOptions([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("world_cities")
+      .select("city, population")
+      .eq("iso2", form.country_code)
+      .order("city", { ascending: true });
+
+    console.log("Selected country code:", form.country_code);
+    console.log("Loaded cities:", data);
+    console.log("City loading error:", error?.message, error?.details, error?.hint);
+
+    if (error) {
+      console.error("Error loading cities:", error);
+      setCityOptions([]);
+      return;
+    }
+
+    setCityOptions(data || []);
+  }
+
+  fetchCitiesForCountry();
+}, [form.country_code]);
+
+
   return (
     <div className="add-spot-page">
       <div className="add-spot-card">
@@ -350,41 +423,53 @@ function createSlug(text) {
             onChange={(e) => updateField("name", e.target.value)}
           />
           
-
-<div className="form-two-columns">
-  <div>
-    <label>City *</label>
+<div className="add-spot-row">
+  <label>
+    Country *
     <select
-      value={form.city}
-      onChange={(e) => {
-        const selectedCity = e.target.value;
-
-        setForm((prev) => ({
-          ...prev,
-          city: selectedCity,
-          country: cityCountryMap[selectedCity],
-          address: "",
-          latitude: "",
-          longitude: "",
-        }));
-
-        setAddressResults([]);
-        setSelectedAddress(null);
-      }}
+      name="country"
+      value={form.country_code}
+      onChange={handleCountryChange}
+      required
     >
-      {cityOptions.map((city) => (
-        <option key={city} value={city}>
-          {city}
+      <option value="">Choose country</option>
+
+      {countries.map((country) => (
+        <option key={country.isoCode} value={country.isoCode}>
+          {country.name}
         </option>
       ))}
     </select>
-  </div>
+  </label>
 
-  <div>
-    <label>Country *</label>
-    <input type="text" value={form.country} readOnly />
-  </div>
+  <label>
+    City *
+    <select
+      name="city"
+      value={form.city}
+      onChange={handleCityChange}
+      required
+      disabled={!form.country_code || cityOptions.length === 0}
+    >
+      <option value="">
+        {!form.country_code
+          ? "Choose country first"
+          : cityOptions.length === 0
+          ? "No cities found"
+          : "Choose city"}
+      </option>
+
+      {cityOptions.map((item, index) => (
+        <option key={`${item.city}-${item.population}`}
+         value={item.city}
+         >
+          {item.city}
+        </option>
+      ))}
+    </select>
+  </label>
 </div>
+
 
           <label>Category</label>
           <select

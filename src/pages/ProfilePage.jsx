@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
+import StudyStats from "../components/StudyStats";
 
 function ProfilePage({ session }) {
   const [profile, setProfile] = useState({
@@ -277,6 +278,7 @@ function ProfilePage({ session }) {
             {saving ? "Saving..." : "Save profile"}
           </button>
         </form>
+        <StudyStats session={session} />
       </div>
     </div>
   );

@@ -4130,4 +4130,125 @@ body {
     height: 48px;
   }
 }
+.study-stats-card {
+  margin-top: 32px;
+  padding: 28px;
+  border-radius: 28px;
+  background: white;
+  border: 1px solid #eee8f6;
+  box-shadow: 0 18px 45px rgba(64, 42, 88, 0.08);
+}
+
+.study-stats-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+.study-stats-header h2 {
+  margin: 0 0 6px;
+  color: #241832;
+}
+
+.study-stats-header p {
+  margin: 0;
+  color: #756b83;
+}
+
+.study-stats-header select {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #ddd6e8;
+  background: white;
+  color: #1f1630;
+  font-weight: 800;
+}
+
+.study-stats-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.study-stats-summary div {
+  padding: 18px;
+  border-radius: 18px;
+  background: #fbfaff;
+  border: 1px solid #eee8f6;
+  text-align: center;
+}
+
+.study-stats-summary strong {
+  display: block;
+  color: #241832;
+  font-size: 24px;
+}
+
+.study-stats-summary span {
+  color: #756b83;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.study-place-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.study-place-list article {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 18px;
+  background: #fbfaff;
+  border: 1px solid #eee8f6;
+}
+
+.study-place-list h3 {
+  margin: 0 0 4px;
+  color: #241832;
+}
+
+.study-place-list p {
+  margin: 0;
+  color: #756b83;
+}
+
+.study-place-list strong {
+  color: #6f5b86;
+  white-space: nowrap;
+}
+
+.study-empty-text {
+  padding: 18px;
+  border-radius: 18px;
+  background: #fbfaff;
+  color: #756b83;
+  text-align: center;
+}
+
+@media (max-width: 700px) {
+  .study-stats-header {
+    flex-direction: column;
+  }
+
+  .study-stats-header select {
+    width: 100%;
+  }
+
+  .study-stats-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .study-place-list article {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
 

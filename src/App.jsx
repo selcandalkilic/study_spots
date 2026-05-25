@@ -16,6 +16,7 @@ import SavedPlacesPage from "./pages/SavedPlacesPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import FriendsPage from "./pages/FriendsPage";
 import BottomNav from "./components/BottomNav";
+import TimerPage from "./pages/TimerPage";
 
 function App() {
   const [selectedCity, setSelectedCity] = useState("All");
@@ -408,6 +409,7 @@ return (
       <Route path="/saved-places" element={<SavedPlacesPage session={session} />}/>
       <Route path="/users/:username" element={<UserProfilePage session={session} />} />  
       <Route path="/friends" element={<FriendsPage session={session} />}/>
+      <Route path="/timer" element={<TimerPage session={session} />} />
     </Routes>
   </BrowserRouter>
   

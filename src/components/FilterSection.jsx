@@ -164,17 +164,34 @@ const selectedSortLabel =
             )}
           </div>
 
-         <select
-          className="filter-select"
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value)}
-        >
-          <option value="recommended">Recommended</option>
-          <option value="rating-high">Highest rated</option>
-          <option value="most-reviewed">Most reviewed</option>
-          <option value="newest">Newest</option>
-          <option value="closest">Closest</option>
-        </select>
+         <div className="custom-select-wrapper">
+            <button
+              type="button"
+              className="custom-select-button"
+              onClick={() => setSortDropdownOpen(!sortDropdownOpen)}
+            >
+              {selectedSortLabel}
+              <span>⌄</span>
+            </button>
+
+            {sortDropdownOpen && (
+              <div className="custom-select-menu">
+                {sortOptions.map((option) => (
+                  <button
+                    type="button"
+                    key={option.value}
+                    className={sortOption === option.value ? "active" : ""}
+                    onClick={() => {
+                      setSortOption(option.value);
+                      setSortDropdownOpen(false);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+</div>
 
           <select
             className="filter-select"

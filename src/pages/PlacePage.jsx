@@ -15,11 +15,11 @@ function PlacePage({ session, isAdmin }) {
       setLoading(true);
 
       const { data, error } = await supabase
-        .from("places")
-        .select("*")
-        .eq("slug", slug)
-        .eq("status", "approved")
-        .single();
+      .from("places")
+      .select("*")
+      .eq("slug", slug)
+      .eq("status", "approved")
+      .single();
 
       if (error) {
         console.log("Error fetching place:", error);

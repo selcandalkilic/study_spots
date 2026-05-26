@@ -4488,3 +4488,42 @@ body {
     line-height: 1.25;
   }
 }
+/* ===== Add spot choice buttons active fix ===== */
+
+.choice-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.choice-button {
+  margin: 0;
+  padding: 13px 20px;
+  border-radius: 14px;
+  border: 2px solid #d8cce8;
+  background: white;
+  color: #6f5b86;
+  font-weight: 900;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.18s ease;
+}
+
+.choice-button:hover {
+  background: #f5f1fa;
+  border-color: #8b6bb1;
+}
+
+.choice-button.active {
+  background: #6f5b86 !important;
+  border-color: #6f5b86 !important;
+  color: white !important;
+  box-shadow: 0 8px 20px rgba(111, 91, 134, 0.28);
+  transform: translateY(-1px);
+}
+
+.choice-button.active::before {
+  content: "✓ ";
+}

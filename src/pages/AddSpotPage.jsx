@@ -81,8 +81,8 @@ const cityCountryMap = {
     seating_rating: 5,
     crowdedness_rating: 5,
     price_rating: null,
-    laptop_friendly : true,
-    seating_type: "Indoor",
+    laptop_friendly : null,
+    seating_type: "",
     comment: "",
   });
 
@@ -172,6 +172,18 @@ async function searchAddress() {
   }
 
   setSearchingAddress(false);
+}
+function confirmAddress(result) {
+  setSelectedAddress(result);
+
+  setForm((prev) => ({
+    ...prev,
+    address: result.display_name,
+    latitude: result.lat,
+    longitude: result.lon,
+  }));
+
+  setAddressResults([]);
 }
   async function uploadPlaceImage(event) {
   const file = event.target.files[0];
@@ -271,7 +283,7 @@ function createSlug(text) {
           noise_level: `${form.noise_rating}/5`,
           seating: `${form.seating_rating}/5`,
           laptop_friendly: form.laptop_friendly,
-          seating_type: form.seating_type,
+          seating_type: form.seating_type || null,
           crowded_times: `${form.crowdedness_rating}/5 crowdedness`,
           price_rating:
             form.price_rating !== null ? Number(form.price_rating) : null,
@@ -648,16 +660,18 @@ useEffect(() => {
                     <label>Seating type</label>
 
                     <div className="choice-button-row">
-                      {["Indoor", "Outdoor", "Both"].map((type) => (
-                        <button
-                          key={type}
-                          type="button"
-                          className={form.seating_type === type ? "choice-button active" : "choice-button"}
-                          onClick={() => updateField("seating_type", type)}
-                        >
-                          {type}
-                        </button>
-                      ))}
+                     {["Indoor", "Outdoor", "Both"].map((type) => (
+                      <button
+                        key={type}
+                        type="button"
+                        className={form.seating_type === type ? "choice-button active" : "choice-button"}
+                        onClick={() =>
+                          updateField("seating_type", form.seating_type === type ? "" : type)
+                        }
+                      >
+                        {type}
+                      </button>
+                    ))}
                     </div>
                   </div>
 
@@ -670,18 +684,22 @@ useEffect(() => {
   <label>Laptop friendly</label>
 
   <div className="choice-button-row">
-      <button
+     <button
         type="button"
-        className={form.laptop_friendly ? "choice-button active" : "choice-button"}
-        onClick={() => updateField("laptop_friendly", true)}
+        className={form.laptop_friendly === true ? "choice-button active" : "choice-button"}
+        onClick={() =>
+          updateField("laptop_friendly", form.laptop_friendly === true ? null : true)
+        }
       >
         Yes
       </button>
 
       <button
         type="button"
-        className={!form.laptop_friendly ? "choice-button active" : "choice-button"}
-        onClick={() => updateField("laptop_friendly", false)}
+        className={form.laptop_friendly === false ? "choice-button active" : "choice-button"}
+        onClick={() =>
+          updateField("laptop_friendly", form.laptop_friendly === false ? null : false)
+        }
       >
         No
       </button>
@@ -700,7 +718,9 @@ useEffect(() => {
                             ? "price-button active"
                             : "price-button"
                         }
-                        onClick={() => updateField("price_rating", number)}
+                        onClick={() =>
+                            updateField("price_rating", form.price_rating === number ? null : number)
+                          }
                     >
                         {number}
                     </button>

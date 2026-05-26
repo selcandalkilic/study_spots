@@ -15,7 +15,7 @@ function StarRating({ label, value, onChange }) {
             key={star}
             type="button"
             className={star <= value ? "star-button active" : "star-button"}
-            onClick={() => onChange(star)}
+            onClick={() => onChange(value === star ? null : star)}
           >
             ★
           </button>
@@ -74,12 +74,12 @@ const cityCountryMap = {
     opening_days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
     opening_time: "09:00",
     closing_time: "18:00",
-    study_rating: 5,
-    wifi_rating: 5,
-    outlets_rating: 5,
-    noise_rating: 5,
-    seating_rating: 5,
-    crowdedness_rating: 5,
+    study_rating: null,
+    wifi_rating: null,
+    outlets_rating: null,
+    noise_rating: null,
+    seating_rating: null,
+    crowdedness_rating: null,
     price_rating: null,
     laptop_friendly : null,
     seating_type: "",
@@ -247,6 +247,10 @@ function createSlug(text) {
       alert("Please fill in name, city, country and address.");
       return;
     }
+    if (form.study_rating === null) {
+        alert("Please choose an overall study rating.");
+        return;
+      }
 
     if (!form.latitude || !form.longitude) {
       alert("Please search and confirm the address on the map first.");
@@ -278,13 +282,15 @@ function createSlug(text) {
           opening_hours: openingHours,
           opening_days: form.opening_days,
           study_rating: Number(form.study_rating),
-          wifi_quality: `${form.wifi_rating}/5`,
-          outlets: `${form.outlets_rating}/5`,
-          noise_level: `${form.noise_rating}/5`,
-          seating: `${form.seating_rating}/5`,
-          laptop_friendly: form.laptop_friendly,
-          seating_type: form.seating_type || null,
-          crowded_times: `${form.crowdedness_rating}/5 crowdedness`,
+          wifi_quality: form.wifi_rating !== null ? `${form.wifi_rating}/5` : null,
+          outlets: form.outlets_rating !== null ? `${form.outlets_rating}/5` : null,
+          noise_level: form.noise_rating !== null ? `${form.noise_rating}/5` : null,
+          seating: form.seating_rating !== null ? `${form.seating_rating}/5` : null,
+          quiet: form.noise_rating !== null ? form.noise_rating >= 4 : false,
+          crowded_times:
+            form.crowdedness_rating !== null
+              ? `${form.crowdedness_rating}/5 crowdedness`
+              : null,
           price_rating:
             form.price_rating !== null ? Number(form.price_rating) : null,
           created_by: session.user.id,
@@ -306,13 +312,12 @@ function createSlug(text) {
         place_id: newPlace.id,
         user_id: session.user.id,
         rating: Number(form.study_rating),
-        wifi_rating: Number(form.wifi_rating),
-        outlets_rating: Number(form.outlets_rating),
-        noise_rating: Number(form.noise_rating),
-        seating_rating: Number(form.seating_rating),
-        laptop_friendly: form.laptop_friendly,
-        seating_type: form.seating_type,
-        crowdedness_rating: Number(form.crowdedness_rating),
+        wifi_rating: form.wifi_rating !== null ? Number(form.wifi_rating) : null,
+        outlets_rating: form.outlets_rating !== null ? Number(form.outlets_rating) : null,
+        noise_rating: form.noise_rating !== null ? Number(form.noise_rating) : null,
+        seating_rating: form.seating_rating !== null ? Number(form.seating_rating) : null,
+        crowdedness_rating:
+          form.crowdedness_rating !== null ? Number(form.crowdedness_rating) : null,
         price_rating:
            form.price_rating !== null ? Number(form.price_rating) : null,
         comment:

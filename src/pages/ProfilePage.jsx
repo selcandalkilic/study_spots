@@ -19,6 +19,10 @@ function ProfilePage({ session }) {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [reviewsCount, setReviewsCount] = useState(0);
+  const [addedPlacesCount, setAddedPlacesCount] = useState(0);
+  const [totalStudySeconds, setTotalStudySeconds] = useState(0);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -47,6 +51,36 @@ function ProfilePage({ session }) {
           study_field: data.study_field || "",
           favorite_study_type: data.favorite_study_type || "",
         });
+      }
+      const { count: reviewCount } = await supabase
+        .from("reviews")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", session.user.id);
+
+      setReviewsCount(reviewCount || 0);
+
+      const { count: placesCount } = await supabase
+        .from("places")
+        .select("*", { count: "exact", head: true })
+        .eq("created_by", session.user.id);
+
+      setAddedPlacesCount(placesCount || 0);
+
+      const { data: sessionsData, error: sessionsError } = await supabase
+        .from("study_sessions")
+        .select("duration_seconds")
+        .eq("user_id", session.user.id);
+
+      if (sessionsError) {
+        console.log("Study sessions fetch error:", sessionsError.message);
+        setTotalStudySeconds(0);
+      } else {
+        const seconds = (sessionsData || []).reduce(
+          (total, item) => total + Number(item.duration_seconds || 0),
+          0
+        );
+
+        setTotalStudySeconds(seconds);
       }
 
       setLoading(false);
@@ -121,6 +155,13 @@ function ProfilePage({ session }) {
       alert(error.message);
     } else {
       alert("Profile saved!");
+      setEditing(false);
+    }
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("Profile saved!");
     }
   }
 
@@ -142,12 +183,176 @@ function ProfilePage({ session }) {
     return <p>Loading profile...</p>;
   }
 
+  const totalStudyHours = Math.floor(totalStudySeconds / 3600);
+  const totalStudyMinutes = Math.floor(totalStudySeconds / 60);
+  const remainingMinutes = totalStudyMinutes % 60;
+
+  const addedPlaceStars = addedPlacesCount * 3;
+  const studyStars = totalStudyHours;
+  const reviewStars = reviewsCount;
+
+  const totalStars = addedPlaceStars + studyStars + reviewStars;
+  const level = Math.floor(totalStars / 5);
+  const starsInCurrentLevel = totalStars % 5;
+  const nextLevel = level + 1;
+  const progressPercent = (starsInCurrentLevel / 5) * 100;
+
+  const starsToShow = Array.from({ length: 5 }, (_, index) =>
+    index < starsInCurrentLevel ? "filled" : "empty"
+  );
+
   return (
     <div className="profile-page">
       <div className="profile-card">
         <Link to="/" className="back-home-link">
           ← Back to homepage
         </Link>
+
+        {!editing && (
+  <>
+    <div className="profile-overview-header">
+      <div className="profile-overview-main">
+        {profile.avatar_url ? (
+          <img
+            className="profile-avatar"
+            src={profile.avatar_url}
+            alt={profile.username}
+          />
+        ) : (
+          <div className="profile-avatar-placeholder">
+            {profile.username ? profile.username[0].toUpperCase() : "U"}
+          </div>
+        )}
+
+        <div>
+          <h1>{profile.username || "Your profile"}</h1>
+          <p>📍 {profile.city || "No city added yet"}</p>
+          <p>{profile.bio || "No bio added yet."}</p>
+          <small>{session.user.email}</small>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        className="profile-edit-button"
+        onClick={() => setEditing(true)}
+      >
+        ✎ Edit Profile
+      </button>
+    </div>
+
+    <div className="profile-level-card">
+      <div>
+        <h2>Level {level}</h2>
+        <p>⭐ Explorer</p>
+      </div>
+
+      <div className="profile-level-badge" aria-label={`Level ${level}`}>
+        <svg className="profile-level-badge-svg" viewBox="0 0 80 96" role="img">
+          <path
+            d="M28 58 L22 92 L40 78 L58 92 L52 58 Z"
+            className="badge-ribbon"
+          />
+
+          <circle cx="40" cy="36" r="30" className="badge-outer" />
+          <circle cx="40" cy="36" r="22" className="badge-inner" />
+
+          <text
+            x="40"
+            y="37"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            className="badge-number"
+          >
+            {level}
+          </text>
+        </svg>
+      </div>
+
+      <div className="profile-level-progress">
+        <div
+          className="profile-level-progress-fill"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+
+      <small>
+        {starsInCurrentLevel} / 5 stars to Level {nextLevel}
+      </small>
+    </div>
+
+    <div className="profile-stars-card">
+      <div className="profile-stars-title">
+        <h2>Your Stars ☆</h2>
+        <p>
+          <strong>{totalStars}</strong> Total Stars
+        </p>
+      </div>
+
+      <div className="profile-star-strip">
+        {starsToShow.map((star, index) => (
+          <span
+            key={index}
+            className={star === "filled" ? "profile-star filled" : "profile-star"}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+
+      <div className="profile-star-rules">
+        <div>
+          <strong>3★</strong>
+          <span>3 stars per added place</span>
+        </div>
+
+        <div>
+          <strong>1★</strong>
+          <span>1 star per study hour</span>
+        </div>
+
+        <div>
+          <strong>1★</strong>
+          <span>1 star per review</span>
+        </div>
+
+        <div>
+          <strong>5★</strong>
+          <span>Every 5 stars = 1 level</span>
+        </div>
+      </div>
+    </div>
+
+    <section className="profile-dashboard-section">
+      <h2>Your Statistics</h2>
+
+      <div className="profile-stats-grid">
+        <div className="profile-stat-card">
+          <span className="profile-stat-icon">⏱</span>
+          <strong>{totalStudyHours} h</strong>
+          <span>Total Study Time</span>
+          <p>
+            {totalStudyHours} hours and {remainingMinutes} minutes
+          </p>
+        </div>
+
+        <div className="profile-stat-card">
+          <span className="profile-stat-icon">📍</span>
+          <strong>{addedPlacesCount}</strong>
+          <span>Added Places</span>
+          <p>Keep discovering great spots ✨</p>
+        </div>
+
+        <div className="profile-stat-card">
+          <span className="profile-stat-icon">✎</span>
+          <strong>{reviewsCount}</strong>
+          <span>Reviews Written</span>
+          <p>Thanks for helping the community 💜</p>
+        </div>
+      </div>
+    </section>
+  </>
+)}
 
         <div className="profile-header">
           {profile.avatar_url ? (
@@ -168,7 +373,8 @@ function ProfilePage({ session }) {
           </div>
         </div>
 
-        <form className="profile-form" onSubmit={saveProfile}>
+        {editing && (
+          <form className="profile-form" onSubmit={saveProfile}>
           <div className="profile-upload-box">
           <label className="profile-upload-label">Profile picture</label>
 
@@ -274,10 +480,19 @@ function ProfilePage({ session }) {
             }
           />
 
-          <button type="submit" disabled={saving}>
+          <button type="submit">
             {saving ? "Saving..." : "Save profile"}
           </button>
+
+          <button
+            type="button"
+            className="profile-cancel-button"
+            onClick={() => setEditing(false)}
+          >
+            Cancel
+          </button>
         </form>
+        )}
         <StudyStats session={session} />
       </div>
     </div>
